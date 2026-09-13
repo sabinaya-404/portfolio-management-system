@@ -8,14 +8,14 @@ if ($demat_id <= 0) {
     exit;
 }
 
-// Check ownership
-$stmt = $conn->prepare("SELECT * FROM demat_accounts WHERE id = ? AND user_id = ?");
+$stmt = $conn->prepare("SELECT * FROM demat_accounts WHERE id = ? AND user_id = ? LIMIT 1");
 $stmt->bind_param("ii", $demat_id, $current_user_id);
 $stmt->execute();
 $demat = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$demat) {
+    $_SESSION['flash_error'] = "Account not found.";
     header("Location: my_demat.php");
     exit;
 }
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (!preg_match('/^[0-9]{16}$/', $boid)) {
         $message = "BOID must be exactly 16 numeric digits.";
     } else {
-        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ? AND id != ?");
+        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ? AND id != ? LIMIT 1");
         $check->bind_param("si", $boid, $demat_id);
         $check->execute();
         
@@ -52,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $update->bind_param("ssssii", $account_name, $account_holder, $broker_name, $boid, $demat_id, $current_user_id);
             
             if ($update->execute()) {
+                $_SESSION['flash_success'] = "Demat account '{$account_name}' updated successfully!";
                 header("Location: my_demat.php");
                 exit;
             } else {
@@ -91,22 +92,22 @@ require_once "includes/header.php";
 
             <div class="form-group">
                 <label for="account_name">Account Nickname</label>
-                <input type="text" id="account_name" name="account_name" value="<?= htmlspecialchars($demat['account_name']) ?>" required>
+                <input type="text" id="account_name" name="account_name" value="<?= htmlspecialchars($_POST['account_name'] ?? $demat['account_name']) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="account_holder">Account Holder Name</label>
-                <input type="text" id="account_holder" name="account_holder" value="<?= htmlspecialchars($demat['account_holder']) ?>" required>
+                <input type="text" id="account_holder" name="account_holder" value="<?= htmlspecialchars($_POST['account_holder'] ?? $demat['account_holder']) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="broker_name">Broker / Depository Participant (DP)</label>
-                <input type="text" id="broker_name" name="broker_name" value="<?= htmlspecialchars($demat['broker_name']) ?>" required>
+                <input type="text" id="broker_name" name="broker_name" value="<?= htmlspecialchars($_POST['broker_name'] ?? $demat['broker_name']) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="boid">16-Digit BOID</label>
-                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" value="<?= htmlspecialchars($demat['boid']) ?>" required>
+                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" value="<?= htmlspecialchars($_POST['boid'] ?? $demat['boid']) ?>" required>
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">

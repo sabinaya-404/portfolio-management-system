@@ -3,6 +3,10 @@ require_once "includes/auth.php";
 require_once "config/database.php";
 
 $message = "";
+$account_name = "";
+$account_holder = "";
+$broker_name = "";
+$boid = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -19,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (!preg_match('/^[0-9]{16}$/', $boid)) {
         $message = "BOID must be exactly 16 numeric digits.";
     } else {
-        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ?");
+        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ? LIMIT 1");
         $check->bind_param("s", $boid);
         $check->execute();
         
@@ -33,10 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->bind_param("issss", $current_user_id, $account_name, $account_holder, $broker_name, $boid);
             
             if ($stmt->execute()) {
+                $_SESSION['flash_success'] = "Demat account '{$account_name}' linked successfully!";
                 header("Location: my_demat.php");
                 exit;
             } else {
-                $message = "Failed to add Demat account.";
+                $message = "Failed to add Demat account. Please try again.";
             }
             $stmt->close();
         }
@@ -72,22 +77,22 @@ require_once "includes/header.php";
 
             <div class="form-group">
                 <label for="account_name">Account Nickname</label>
-                <input type="text" id="account_name" name="account_name" placeholder="e.g. Personal Portfolio" required>
+                <input type="text" id="account_name" name="account_name" value="<?= htmlspecialchars($account_name) ?>" placeholder="e.g. Personal Portfolio" required>
             </div>
 
             <div class="form-group">
                 <label for="account_holder">Account Holder Name</label>
-                <input type="text" id="account_holder" name="account_holder" placeholder="Full name registered with DP" required>
+                <input type="text" id="account_holder" name="account_holder" value="<?= htmlspecialchars($account_holder) ?>" placeholder="Full name registered with DP" required>
             </div>
 
             <div class="form-group">
                 <label for="broker_name">Broker / Depository Participant (DP)</label>
-                <input type="text" id="broker_name" name="broker_name" placeholder="e.g. Naasa Securities (Broker 58)" required>
+                <input type="text" id="broker_name" name="broker_name" value="<?= htmlspecialchars($broker_name) ?>" placeholder="e.g. Naasa Securities (Broker 58)" required>
             </div>
 
             <div class="form-group">
                 <label for="boid">16-Digit BOID</label>
-                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" placeholder="1301234567890123" required>
+                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" value="<?= htmlspecialchars($boid) ?>" placeholder="1301234567890123" required>
                 <small style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display: block;">
                     Consists of 8-digit DP ID + 8-digit Client ID.
                 </small>

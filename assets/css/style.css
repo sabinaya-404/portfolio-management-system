@@ -27,6 +27,59 @@
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
+/* =========================================================
+   DARK THEME PALETTE (SLATE / NAVY ENTERPRISE)
+   ========================================================= */
+[data-theme="dark"] {
+    --bg-app: #0b1120;             /* Midnight Navy */
+    --bg-surface: #1e293b;         /* Elevated Slate Card */
+    --bg-surface-secondary: #0f172a;
+    --border: #334155;
+    --border-dark: #475569;
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+    
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --primary-subtle: #1e3a8a;
+    
+    --success: #34d399;
+    --success-bg: rgba(16, 185, 129, 0.15);
+    --danger: #f87171;
+    --danger-bg: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select {
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .demat-card-tile:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Theme Toggle Button Styling */
+.theme-toggle-btn {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    border-color: var(--border-dark);
+}
 
 * {
     box-sizing: border-box;
@@ -625,4 +678,85 @@ body {
     color: var(--text-muted);
     font-size: 13px;
     margin-bottom: 18px;
+}
+/* =========================================================
+   TASTEFUL MICRO-ANIMATIONS & TRANSITIONS
+   ========================================================= */
+
+/* 1. Smooth Entry on Page Load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-main, .auth-card {
+    animation: fadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 2. Alert Notification Slide-Down */
+@keyframes alertSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert {
+    animation: alertSlideDown 0.3s ease forwards;
+}
+
+/* 3. Subtle Card Hover Lift */
+.demat-card-tile, .summary-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.demat-card-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+    border-color: var(--border-dark);
+}
+
+.summary-card:hover {
+    border-color: var(--border-dark);
+}
+
+/* 4. Button Click / Active Press Effect */
+.btn:active, .primary-button:active, .btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary, .primary-button {
+    transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:hover, .primary-button:hover {
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+/* 5. Sidebar Nav Hover Slide */
+.nav-link {
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.nav-link:hover {
+    transform: translateX(3px);
+}
+
+.nav-link.active {
+    transform: none;
+}
+
+/* 6. Form Input Focus Ring Transition */
+.form-group input, .form-group select {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }

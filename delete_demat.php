@@ -12,7 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($demat_id > 0) {
         $stmt = $conn->prepare("DELETE FROM demat_accounts WHERE id = ? AND user_id = ?");
         $stmt->bind_param("ii", $demat_id, $current_user_id);
-        $stmt->execute();
+        
+        if ($stmt->execute() && $stmt->affected_rows > 0) {
+            $_SESSION['flash_success'] = "Demat account deleted successfully.";
+        } else {
+            $_SESSION['flash_error'] = "Could not delete the Demat account.";
+        }
         $stmt->close();
     }
 }
