@@ -1,6 +1,32 @@
-/* ================================
-   Global
-================================ */
+/* =========================================================
+   AUTHENTIC FINANCIAL APPLICATION THEME (CLEAN ENTERPRISE)
+   ========================================================= */
+
+:root {
+    --bg-app: #f4f6f9;
+    --bg-surface: #ffffff;
+    --bg-surface-secondary: #f8fafc;
+    --border: #e2e8f0;
+    --border-dark: #cbd5e1;
+    
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    
+    --primary: #1e40af;         /* Deep Corporate Navy */
+    --primary-hover: #1d4ed8;
+    --primary-subtle: #eff6ff;
+    
+    --success: #15803d;
+    --success-bg: #dcfce7;
+    --danger: #b91c1c;
+    --danger-bg: #fee2e2;
+    --warning: #b45309;
+    --warning-bg: #fef3c7;
+    
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
 
 * {
     box-sizing: border-box;
@@ -9,161 +35,64 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f7fb;
-    color: #1f2937;
-    min-height: 100vh;
+    font-family: var(--font);
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-
-/* ================================
-   Authentication Layout
-================================ */
-
+/* =========================================================
+   AUTHENTICATION & AUTH CARDS
+   ========================================================= */
 .auth-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px;
+    background-color: var(--bg-app);
 }
 
 .auth-card {
     width: 100%;
-    max-width: 430px;
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+    max-width: 440px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
 }
 
 .auth-logo {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .auth-logo h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
 }
 
 .auth-logo p {
-    color: #6b7280;
-    font-size: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
 }
-
-
-/* ================================
-   Form
-================================ */
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-group input::placeholder {
-    color: #9ca3af;
-}
-
-.form-group input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-
-/* ================================
-   Buttons
-================================ */
-
-.btn {
-    width: 100%;
-    border: none;
-    border-radius: 8px;
-    padding: 13px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-primary {
-    background: #2563eb;
-    color: #ffffff;
-}
-
-.btn-primary:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-/* ================================
-   Messages
-================================ */
-
-.alert {
-    padding: 12px 14px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 14px;
-}
-
-.alert-error {
-    background: #fef2f2;
-    color: #b91c1c;
-}
-
-.alert-success {
-    background: #f0fdf4;
-    color: #15803d;
-}
-
-
-/* ================================
-   Authentication Links
-================================ */
 
 .auth-footer {
     text-align: center;
-    margin-top: 24px;
-    font-size: 14px;
-    color: #6b7280;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
 }
 
 .auth-footer a {
-    color: #2563eb;
+    color: var(--primary);
     text-decoration: none;
     font-weight: 600;
 }
@@ -172,2162 +101,528 @@ body {
     text-decoration: underline;
 }
 
+/* =========================================================
+   FORMS & INPUTS
+   ========================================================= */
+.form-group {
+    margin-bottom: 16px;
+}
 
-/* ================================
-   Responsive
-================================ */
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+}
 
-@media (max-width: 480px) {
-
-    .auth-card {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
-    max-width: 430px;
+    padding: 10px 12px;
     background: #ffffff;
-    padding: 42px;
-    border-radius: 18px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-    .auth-logo {
-    text-align: center;
-    margin-bottom: 32px;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
-
-.auth-logo h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 10px;
-}
-
-.auth-logo p {
-    color: #6b7280;
-    font-size: 14px;
-    line-height: 1.5;
-}
-}
-/* ================================
-   Password Field
-================================ */
 
 .password-wrapper {
     position: relative;
 }
 
 .password-wrapper input {
-    padding-right: 48px;
+    padding-right: 42px;
 }
 
 .password-toggle {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-
-    width: 32px;
-    height: 32px;
-
-    padding: 6px;
+    background: none;
     border: none;
-    background: transparent;
-
     cursor: pointer;
-
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
-
-    color: #6b7280;
+    padding: 4px;
 }
 
 .password-toggle:hover {
-    background: transparent;
-    color: #2563eb;
+    color: var(--text-main);
 }
 
 .password-toggle svg {
-    width: 19px;
-    height: 19px;
-
+    width: 18px;
+    height: 18px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.8;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-
-/* ================================
-   Password Error
-================================ */
-
 .password-error {
-    color: #b91c1c;
-    font-size: 13px;
-    margin-top: -10px;
-    margin-bottom: 15px;
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
 }
+
 /* =========================================================
-   DASHBOARD
+   BUTTONS & ALERTS
    ========================================================= */
-
-.dashboard-page {
-    margin: 0;
-    background: #0b0d0c;
-    color: #eeeeeb;
-    font-family: Arial, Helvetica, sans-serif;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
 }
 
+.btn-primary, .primary-button {
+    background: var(--primary);
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.btn-primary:hover, .primary-button:hover {
+    background: var(--primary-hover);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alert-error {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid #bbf7d0;
+}
+
+.reset-link-box {
+    background: var(--primary-subtle);
+    border: 1px solid #bfdbfe;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.reset-link-box a {
+    color: var(--primary);
+    font-weight: 600;
+    word-break: break-all;
+}
+
+/* =========================================================
+   LAYOUT & SIDEBAR
+   ========================================================= */
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
 }
 
-
-/* =========================
-   SIDEBAR
-   ========================= */
-
 .sidebar {
-    width: 235px;
-    min-height: 100vh;
-    background: #101311;
-    border-right: 1px solid #252925;
+    width: 250px;
+    background: #0f172a;
+    color: #f8fafc;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
-    padding: 28px 16px 20px;
+    position: fixed;
+    height: 100vh;
+    border-right: 1px solid #1e293b;
+    z-index: 100;
 }
 
 .sidebar-brand {
+    padding: 20px 24px;
     display: flex;
     align-items: center;
-    gap: 11px;
-    padding: 0 10px 35px;
+    gap: 12px;
+    border-bottom: 1px solid #1e293b;
 }
 
 .brand-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #a4e56d;
-    color: #101311;
+    width: 34px;
+    height: 34px;
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 19px;
-    font-weight: 700;
 }
 
 .sidebar-brand h2 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #f1f1ed;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #ffffff;
 }
 
 .sidebar-brand span {
-    color: #737871;
-    font-size: 12px;
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-
 .sidebar-nav {
+    padding: 16px 12px;
     flex: 1;
 }
 
 .nav-title {
-    margin: 0 10px 12px;
-    font-size: 10px;
-    letter-spacing: 1.2px;
-    color: #666c66;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 8px 12px 6px;
 }
 
 .nav-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    height: 43px;
-    padding: 0 12px;
-    margin-bottom: 5px;
-    border-radius: 8px;
-    color: #858b84;
+    gap: 10px;
+    padding: 9px 12px;
+    color: #cbd5e1;
     text-decoration: none;
-    font-size: 13px;
-    transition: 0.2s ease;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    transition: all 0.15s ease;
 }
 
 .nav-link:hover {
-    background: #191d1a;
-    color: #e8eae5;
+    background: #1e293b;
+    color: #ffffff;
 }
 
 .nav-link.active {
-    background: #26361d;
-    color: #b2ed79;
-}
-
-.nav-icon {
-    width: 18px;
-    text-align: center;
-    font-size: 15px;
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .sidebar-bottom {
-    border-top: 1px solid #252925;
-    padding-top: 15px;
+    padding: 16px 12px;
+    border-top: 1px solid #1e293b;
 }
 
+.logout-link {
+    color: #f87171;
+}
 .logout-link:hover {
-    color: #e78b8b;
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
 }
 
-
-/* =========================
-   MAIN CONTENT
-   ========================= */
-
+/* =========================================================
+   MAIN CONTENT AREA
+   ========================================================= */
 .dashboard-main {
+    margin-left: 250px;
     flex: 1;
-    min-width: 0;
-    padding: 30px 38px 50px;
-    box-sizing: border-box;
+    padding: 24px 32px 48px;
 }
-
-
-/* =========================
-   HEADER
-   ========================= */
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
 }
 
-.page-label,
-.welcome-label,
-.section-label {
-    margin: 0 0 7px;
-    color: #70766f;
-    font-size: 10px;
+.page-label {
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1.3px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
 }
 
 .dashboard-header h1 {
-    margin: 0;
-    font-size: 27px;
-    font-weight: 500;
-    color: #f1f1ed;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
     gap: 10px;
+    background: var(--bg-surface);
+    padding: 6px 14px 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
 }
 
 .user-avatar {
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
     border-radius: 50%;
-    background: #28381f;
-    border: 1px solid #435b34;
-    color: #b5ee7d;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
 }
 
 .user-info strong {
     font-size: 13px;
-    font-weight: 500;
-    color: #e9ebe6;
+    display: block;
+    line-height: 1.2;
 }
 
 .user-info span {
     font-size: 11px;
-    color: #70766f;
+    color: var(--text-muted);
 }
 
-
-/* =========================
-   WELCOME
-   ========================= */
-
-.welcome-section {
-    background: #111512;
-    border: 1px solid #242924;
-    border-radius: 12px;
-    padding: 27px 28px;
-    margin-bottom: 18px;
-}
-
-.welcome-section h2 {
-    margin: 0 0 7px;
-    font-size: 22px;
-    font-weight: 500;
-    color: #f0f1ed;
-}
-
-.welcome-section p:last-child {
-    margin: 0;
-    color: #777d76;
-    font-size: 13px;
-}
-
-
-/* =========================
-   SUMMARY CARDS
-   ========================= */
-
+/* =========================================================
+   METRIC SUMMARY TILES & CARDS
+   ========================================================= */
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 18px;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .summary-card {
-    background: #111512;
-    border: 1px solid #242924;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.card-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    background: #1d2819;
-    color: #a8e875;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-}
-
-.summary-card > div:last-child {
-    display: flex;
-    flex-direction: column;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .summary-card span {
-    color: #777d76;
-    font-size: 11px;
-    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
 .summary-card strong {
-    color: #eeeeea;
-    font-size: 23px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+    margin: 4px 0 2px;
+    font-variant-numeric: tabular-nums;
 }
 
 .summary-card small {
-    color: #5f655e;
-    font-size: 10px;
-    margin-top: 3px;
-}
-
-
-/* =========================
-   DASHBOARD GRID
-   ========================= */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 18px;
-    margin-bottom: 18px;
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
 .dashboard-card {
-    background: #111512;
-    border: 1px solid #242924;
-    border-radius: 12px;
-    padding: 22px;
-    box-sizing: border-box;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    margin-bottom: 24px;
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
 }
 
 .card-header h3 {
-    margin: 0;
-    color: #e9ebe6;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.section-label {
-    margin-bottom: 6px;
-    font-size: 9px;
-}
-
-.view-link {
-    color: #9ddd68;
-    text-decoration: none;
-    font-size: 11px;
-}
-
-.view-link:hover {
-    color: #b5ed80;
-}
-
-
-/* =========================
-   EMPTY STATE
-   ========================= */
-
-.empty-state {
-    border: 1px dashed #2b312b;
-    border-radius: 9px;
-    min-height: 175px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.empty-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #1d2819;
-    color: #a8e875;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.empty-state h4 {
-    margin: 0 0 5px;
-    color: #dedfdc;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.empty-state p {
-    max-width: 320px;
-    margin: 0 0 15px;
-    color: #666d66;
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-.primary-button {
-    display: inline-block;
-    background: #a4e56d;
-    color: #101510;
-    padding: 9px 14px;
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-.primary-button:hover {
-    background: #b4ee82;
-}
-
-
-/* =========================
-   QUICK ACTIONS
-   ========================= */
-
-.quick-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.quick-action {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #0d100e;
-    border: 1px solid #202520;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.2s ease;
-}
-
-.quick-action:hover {
-    border-color: #3b4e34;
-    background: #151a15;
-}
-
-.quick-icon {
-    width: 31px;
-    height: 31px;
-    border-radius: 7px;
-    background: #1d2819;
-    color: #a8e875;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-}
-
-.quick-action > div {
-    flex: 1;
-}
-
-.quick-action strong {
-    display: block;
-    color: #dfe1dd;
-    font-size: 12px;
-    font-weight: 500;
-    margin-bottom: 3px;
-}
-
-.quick-action small {
-    color: #666d66;
-    font-size: 10px;
-}
-
-.arrow {
-    color: #606760;
-    font-size: 13px;
-}
-
-
-/* =========================
-   PORTFOLIO TABLE
-   ========================= */
-
-.portfolio-preview {
-    margin-bottom: 20px;
-}
-
-.table-placeholder {
-    border: 1px solid #202520;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.placeholder-row {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 0.7fr;
-    padding: 13px 15px;
-    gap: 10px;
-}
-
-.placeholder-header {
-    background: #0d100e;
-    color: #666d66;
-    font-size: 10px;
-}
-
-.placeholder-message {
-    min-height: 90px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    color: #666d66;
-    font-size: 11px;
-}
-
-.placeholder-message small {
-    color: #4f554f;
-    font-size: 10px;
-}
-
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-
-@media (max-width: 900px) {
-
-    .sidebar {
-        width: 200px;
-    }
-
-    .dashboard-main {
-        padding: 25px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 700px) {
-
-    .sidebar {
-        width: 65px;
-        padding: 20px 8px;
-    }
-
-    .sidebar-brand {
-        justify-content: center;
-        padding: 0 0 25px;
-    }
-
-    .sidebar-brand > div:last-child,
-    .nav-title,
-    .nav-link {
-        font-size: 0;
-    }
-
-    .nav-link {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .nav-icon {
-        font-size: 15px;
-    }
-
-    .sidebar-brand .brand-icon {
-        flex-shrink: 0;
-    }
-
-    .dashboard-main {
-        padding: 20px 15px;
-    }
-
-    .summary-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .user-info {
-        display: none;
-    }
-
-    .placeholder-row {
-        grid-template-columns: 1fr 1fr;
-    }
-
-}
-/* =========================
-   DEMAT ACCOUNT LIST
-   ========================= */
-
-.demat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.demat-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px;
-    background: #0d100e;
-    border: 1px solid #202520;
-    border-radius: 8px;
-    transition: 0.2s ease;
-}
-
-.demat-item:hover {
-    background: #151a15;
-    border-color: #3b4e34;
-}
-
-.demat-item-icon {
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: #1d2819;
-    color: #a8e875;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-}
-
-.demat-item-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.demat-item-info strong {
-    color: #e4e6e1;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.demat-item-info span {
-    color: #858b84;
-    font-size: 10px;
-}
-
-.demat-item-info small {
-    color: #5f655e;
-    font-size: 9px;
-}
-
-.demat-arrow {
-    color: #717870;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 5px;
-}
-
-.demat-arrow:hover {
-    color: #a8e875;
-}
-.forgot-password {
-    display: block;
-    margin-bottom: 12px;
-    color: #a4e56d;
-    text-decoration: none;
-    font-size: 12px;
-}
-
-.forgot-password:hover {
-    color: #b5ee80;
-}
-
-.auth-footer p {
-    margin: 0;
-}
-.reset-link-box {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #151a15;
-    border: 1px solid #2a3528;
-    text-align: center;
-}
-
-.reset-link-box p {
-    margin: 0 0 8px;
-    color: #858b84;
-    font-size: 11px;
-}
-
-.reset-link-box a {
-    color: #a8e875;
-    font-size: 12px;
-    text-decoration: none;
-}
-
-.reset-link-box a:hover {
-    text-decoration: underline;
-}
-/* =========================================================
-   DEMAT MANAGEMENT PAGE
-   ========================================================= */
-
-.demat-page {
-    margin: 0;
-    min-height: 100vh;
-    background: #080c0a;
-    color: #e8eee9;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-
-/* ================= LAYOUT ================= */
-
-.demat-layout {
-    display: flex;
-    min-height: 100vh;
-}
-
-
-/* ================= SIDEBAR ================= */
-
-.demat-sidebar {
-    width: 260px;
-    min-height: 100vh;
-    background: #0d1310;
-    border-right: 1px solid #202923;
-    display: flex;
-    flex-direction: column;
-    padding: 28px 18px;
-    box-sizing: border-box;
-}
-
-
-.sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 6px 12px 35px;
-}
-
-
-.brand-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 13px;
-    background: #a6ef5f;
-    color: #0b100c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 800;
-}
-
-
-.sidebar-brand h2 {
-    margin: 0;
-    font-size: 19px;
-    letter-spacing: -0.4px;
-}
-
-
-.sidebar-brand span {
-    color: #718078;
-    font-size: 14px;
-}
-
-
-.sidebar-section-title {
-    color: #53625a;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 0 14px 12px;
-}
-
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-
-.sidebar-nav a,
-.sidebar-bottom a {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 13px 14px;
-    border-radius: 11px;
-    color: #87958d;
-    text-decoration: none;
     font-size: 15px;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-
-.sidebar-nav a:hover,
-.sidebar-bottom a:hover {
-    background: #151d18;
-    color: #dce6df;
-    transform: translateX(3px);
-}
-
-
-.sidebar-nav a.active {
-    background: #20361b;
-    color: #a6ef5f;
-}
-
-
-.nav-icon {
-    width: 20px;
-    text-align: center;
-    font-size: 17px;
-}
-
-
-.sidebar-bottom {
-    margin-top: auto;
-    border-top: 1px solid #202923;
-    padding-top: 20px;
-}
-
-
-/* ================= MAIN ================= */
-
-.demat-main {
-    flex: 1;
-    min-width: 0;
-}
-
-
-.demat-topbar {
-    height: 68px;
-    border-bottom: 1px solid #202923;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 25px;
-    padding: 0 42px;
-    box-sizing: border-box;
-}
-
-
-.topbar-search {
-    width: 245px;
-    height: 44px;
-    background: #19211c;
-    border: 1px solid #29342d;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 15px;
-    box-sizing: border-box;
-}
-
-
-.topbar-search span {
-    color: #839088;
-    font-size: 22px;
-}
-
-
-.topbar-search input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #e8eee9;
-    font-size: 14px;
-}
-
-
-.topbar-search input::placeholder {
-    color: #68756d;
-}
-
-
-.topbar-actions {
-    display: flex;
-    gap: 8px;
-}
-
-
-.topbar-icon {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: transparent;
-    color: #b5c0b9;
-    font-size: 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-
-.topbar-icon:hover {
-    background: #172019;
-    color: #a6ef5f;
-}
-
-
-/* ================= CONTENT ================= */
-
-.demat-content {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 42px;
-}
-
-
-/* ================= PAGE HEADER ================= */
-
-.page-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 30px;
-    margin-bottom: 35px;
-}
-
-
-.eyebrow {
-    display: block;
-    color: #718078;
-    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
+    color: var(--text-main);
 }
 
-
-.page-heading h1 {
-    margin: 0;
-    font-size: clamp(38px, 4vw, 54px);
-    line-height: 1;
-    letter-spacing: -2px;
-}
-
-
-.page-heading p {
-    margin: 13px 0 0;
-    color: #7e8b83;
-    font-size: 16px;
-}
-
-
-.add-account-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 13px 20px;
-    border-radius: 9px;
-    background: #12c48b;
-    color: #06110c;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-    box-shadow: 0 0 0 rgba(18, 196, 139, 0);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-
-.add-account-btn:hover {
-    background: #24d99e;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(18, 196, 139, 0.16);
-}
-
-
-.add-account-btn span {
-    font-size: 20px;
-    line-height: 0;
-}
-
-
-/* ================= SUMMARY ================= */
-
-.demat-summary {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 18px;
-    margin-bottom: 48px;
-}
-
-
-.summary-card {
-    min-height: 145px;
-    padding: 27px;
-    border: 1px solid #202923;
-    border-radius: 15px;
-    background:
-        linear-gradient(
-            135deg,
-            #0f1813,
-            #0c120f
-        );
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-}
-
-
-.summary-card::after {
-    content: "";
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    right: -70px;
-    top: -70px;
-    border-radius: 50%;
-    background: rgba(166, 239, 95, 0.04);
-}
-
-
-.summary-primary {
-    border-color: #29372c;
-}
-
-
-.summary-icon {
-    width: 54px;
-    height: 54px;
-    border-radius: 14px;
-    background: #172819;
-    color: #a6ef5f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 23px;
-    flex-shrink: 0;
-}
-
-
-.summary-content {
-    display: flex;
-    flex-direction: column;
-}
-
-
-.summary-content span {
-    color: #718078;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-}
-
-
-.summary-content strong {
-    margin-top: 5px;
-    font-size: 35px;
-    letter-spacing: -1px;
-}
-
-
-.summary-content small {
-    margin-top: 5px;
-    color: #66736b;
-    font-size: 13px;
-}
-
-
-/* ================= ACCOUNT SECTION ================= */
-
-.accounts-section {
-    margin-top: 10px;
-}
-
-
-.section-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 18px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #1d2620;
-}
-
-
-.section-heading h2 {
-    margin: 0;
-    font-size: 26px;
-    letter-spacing: -0.7px;
-}
-
-
-.account-count {
-    color: #6f7d74;
-    font-size: 13px;
-}
-
-
+/* =========================================================
+   DEMAT TILES & BADGES
+   ========================================================= */
 .accounts-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 16px;
 }
 
-
-/* ================= ACCOUNT CARD ================= */
-
-.demat-card {
-    background: #0e1511;
-    border: 1px solid #202a23;
-    border-radius: 15px;
-    padding: 22px;
-    transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-    animation: cardAppear 0.45s ease both;
-}
-
-
-.demat-card:nth-child(2) {
-    animation-delay: 0.07s;
-}
-
-
-.demat-card:nth-child(3) {
-    animation-delay: 0.14s;
-}
-
-
-.demat-card:nth-child(4) {
-    animation-delay: 0.21s;
-}
-
-
-.demat-card:hover {
-    transform: translateY(-4px);
-    border-color: #354638;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-
-@keyframes cardAppear {
-
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-
-/* ================= CARD TOP ================= */
-
-.demat-card-top {
+.demat-card-tile {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+.demat-card-tile:hover {
+    border-color: var(--border-dark);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
 
-.broker-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 13px;
-    background: #19291b;
-    color: #a6ef5f;
+.demat-tile-header {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
 }
 
-
-.account-title {
-    min-width: 0;
-    flex: 1;
+.demat-tile-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
 }
-
-
-.account-title h3 {
-    margin: 0 0 5px;
-    font-size: 17px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 
 .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #88bd69;
+    background: var(--success-bg);
+    color: var(--success);
     font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
 
-
-.status-badge i {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #91e75c;
-    box-shadow: 0 0 8px rgba(145, 231, 92, 0.5);
-}
-
-
-.account-menu {
-    color: #5f6b64;
-    font-size: 22px;
-}
-
-
-/* ================= DETAILS ================= */
-
-.account-details {
-    margin-top: 25px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-
-
-.detail-item {
-    min-width: 0;
-}
-
-
-.detail-item span {
-    display: block;
-    color: #5f6c64;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
+.demat-info-row {
+    font-size: 13px;
+    color: var(--text-muted);
     margin-bottom: 6px;
 }
 
-
-.detail-item strong {
-    display: block;
-    color: #dce4de;
-    font-size: 14px;
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.demat-info-row strong {
+    color: var(--text-main);
 }
 
-
-.boid-detail {
-    grid-column: 1 / -1;
-    padding-top: 3px;
-}
-
-
-.boid-detail strong {
-    font-family: monospace;
+.boid-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-surface-secondary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-main);
     letter-spacing: 0.5px;
-    color: #aebbb3;
-}
-
-
-/* ================= CARD FOOTER ================= */
-
-.demat-card-footer {
-    margin-top: 23px;
-    padding-top: 16px;
-    border-top: 1px solid #1d2620;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-
-.account-label {
-    color: #56635b;
-    font-size: 11px;
-}
-
-
-.account-actions {
-    display: flex;
-    gap: 8px;
-}
-
-
-.action-btn {
-    padding: 8px 13px;
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 600;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-
-.edit-btn {
-    color: #b7c6bd;
-    background: #171f1a;
-    border: 1px solid #273129;
-}
-
-
-.edit-btn:hover {
-    background: #202b24;
-    color: #a6ef5f;
-    transform: translateY(-1px);
-}
-
-
-.delete-btn {
-    color: #c88484;
-    background: transparent;
-    border: 1px solid #3a2727;
-}
-
-
-.delete-btn:hover {
-    background: #291919;
-    color: #ef9999;
-    transform: translateY(-1px);
-}
-
-
-/* ================= EMPTY STATE ================= */
-
-.empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 70px 30px;
-    border: 1px dashed #29342d;
-    border-radius: 16px;
-    background: #0c120f;
-    animation: cardAppear 0.45s ease both;
-}
-
-
-.empty-icon {
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 18px;
-    border-radius: 18px;
-    background: #172719;
-    color: #a6ef5f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-}
-
-
-.empty-state h3 {
-    margin: 0;
-    font-size: 21px;
-}
-
-
-.empty-state p {
-    max-width: 420px;
-    margin: 10px auto 25px;
-    color: #6f7c73;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 1000px) {
-
-    .demat-sidebar {
-        width: 215px;
-    }
-
-    .demat-content {
-        padding: 30px;
-    }
-
-    .accounts-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 760px) {
-
-    .demat-sidebar {
-        width: 70px;
-        padding: 20px 10px;
-    }
-
-    .sidebar-brand > div:last-child,
-    .sidebar-section-title,
-    .sidebar-nav a span:last-child,
-    .sidebar-bottom a span:last-child {
-        display: none;
-    }
-
-    .sidebar-brand {
-        justify-content: center;
-        padding: 6px 0 30px;
-    }
-
-    .sidebar-nav a,
-    .sidebar-bottom a {
-        justify-content: center;
-        padding: 13px 8px;
-    }
-
-    .demat-topbar {
-        padding: 0 20px;
-    }
-
-    .topbar-search {
-        width: 190px;
-    }
-
-    .demat-content {
-        padding: 25px 20px;
-    }
-
-    .page-heading {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .demat-summary {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 520px) {
-
-    .demat-topbar {
-        height: 60px;
-    }
-
-    .topbar-actions {
-        display: none;
-    }
-
-    .topbar-search {
-        width: 100%;
-    }
-
-    .page-heading h1 {
-        font-size: 38px;
-    }
-
-    .summary-card {
-        padding: 20px;
-    }
-
-    .account-details {
-        grid-template-columns: 1fr;
-    }
-
-    .boid-detail {
-        grid-column: auto;
-    }
-
-    .demat-card-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .account-actions {
-        width: 100%;
-    }
-
-    .action-btn {
-        flex: 1;
-        text-align: center;
-    }
-
-}
-/* =========================================================
-   DEMAT PAGE - MATCH DASHBOARD SCALE
-   ========================================================= */
-
-.demat-sidebar {
-    width: 235px;
-    padding: 28px 16px 20px;
-}
-
-
-/* Match Dashboard main proportions */
-
-.demat-content {
-    max-width: none;
-    margin: 0;
-    padding: 30px 38px 50px;
-}
-
-
-/* Match Dashboard top bar */
-
-.demat-topbar {
-    height: 68px;
-    padding: 0 38px;
-}
-
-
-/* Page heading */
-
-.page-heading {
-    margin-bottom: 28px;
-}
-
-.page-heading h1 {
-    font-size: 27px;
-    line-height: 1.2;
-    letter-spacing: -0.5px;
-}
-
-.page-heading p {
-    margin-top: 7px;
-    font-size: 13px;
-}
-
-
-/* Add account button */
-
-.add-account-btn {
-    padding: 11px 17px;
-    font-size: 13px;
-}
-
-
-/* =========================================================
-   DEMAT SUMMARY
-   ========================================================= */
-
-.demat-summary {
-    gap: 15px;
-    margin-bottom: 28px;
-}
-
-
-/* IMPORTANT:
-   This is now unique to My Demat so it cannot
-   interfere with Dashboard's .summary-card.
-*/
-
-.demat-summary-card {
-    min-height: 105px;
-    padding: 20px;
-    border: 1px solid #242924;
-    border-radius: 12px;
-    background: #111512;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-}
-
-
-.demat-summary-card::after {
-    content: "";
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    right: -55px;
-    top: -55px;
-    border-radius: 50%;
-    background: rgba(166, 239, 95, 0.04);
-}
-
-
-.demat-summary-card .summary-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    font-size: 17px;
-}
-
-
-.demat-summary-card .summary-content span {
-    font-size: 10px;
-}
-
-
-.demat-summary-card .summary-content strong {
-    font-size: 27px;
-}
-
-
-.demat-summary-card .summary-content small {
-    font-size: 10px;
-}
-
-
-/* =========================================================
-   ACCOUNT SECTION
-   ========================================================= */
-
-.accounts-section {
-    margin-top: 0;
-}
-
-
-.section-heading {
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-}
-
-
-.section-heading h2 {
-    font-size: 22px;
-    letter-spacing: -0.4px;
-}
-
-
-.account-count {
-    font-size: 11px;
-}
-
-
-/* Account cards */
-
-.accounts-grid {
-    gap: 15px;
-}
-
-
-.demat-card {
-    padding: 20px;
-    border-radius: 12px;
-}
-
-
-.demat-card-top {
-    gap: 12px;
-}
-
-
-.broker-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    font-size: 17px;
-}
-
-
-.account-title h3 {
-    font-size: 15px;
-}
-
-
-.account-details {
-    margin-top: 20px;
-    gap: 15px;
-}
-
-
-.detail-item span {
-    font-size: 9px;
-}
-
-
-.detail-item strong {
-    font-size: 12px;
-}
-
-
-.demat-card-footer {
-    margin-top: 20px;
-    padding-top: 15px;
-}
-
-
-.account-label {
-    font-size: 9px;
-}
-
-
-.action-btn {
-    padding: 7px 12px;
-    font-size: 11px;
-}
-/* =========================================================
-   ADD DEMAT ACCOUNT
-   ========================================================= */
-
-.add-demat-content {
-    padding-top: 28px;
-}
-
-
-/* ================= BACK LINK ================= */
-
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: #75827a;
-    text-decoration: none;
-    font-size: 12px;
-    margin-bottom: 25px;
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.back-link:hover {
-    color: #a6ef5f;
-    transform: translateX(-3px);
-}
-
-
-/* ================= HEADER ================= */
-
-.add-demat-heading {
-    margin-bottom: 30px;
-    animation: cardAppear 0.4s ease both;
-}
-
-.add-demat-heading h1 {
-    margin: 0;
-    font-size: 32px;
-    line-height: 1.15;
-    letter-spacing: -0.8px;
-}
-
-.add-demat-heading p {
-    margin: 8px 0 0;
-    color: #718078;
-    font-size: 13px;
-}
-
-
-/* ================= LAYOUT ================= */
-
-.add-demat-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 290px;
-    gap: 18px;
-    max-width: 1050px;
-}
-
-
-/* ================= FORM CARD ================= */
-
-.add-demat-card {
-    background: #0e1511;
-    border: 1px solid #202a23;
-    border-radius: 14px;
-    padding: 25px;
-    animation: cardAppear 0.45s ease both;
-}
-
-
-/* ================= CARD HEADER ================= */
-
-.form-card-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding-bottom: 22px;
-    margin-bottom: 24px;
-    border-bottom: 1px solid #1d2620;
-}
-
-.form-header-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 11px;
-    background: #172819;
-    color: #a6ef5f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 500;
-}
-
-.form-card-header h2 {
-    margin: 0;
-    font-size: 18px;
-    letter-spacing: -0.3px;
-}
-
-.form-card-header p {
-    margin: 5px 0 0;
-    color: #68756d;
-    font-size: 11px;
-}
-
-
-/* ================= MESSAGE ================= */
-
-.demat-message {
-    padding: 11px 13px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: #172719;
-    border: 1px solid #30482c;
-    color: #a6ef5f;
-    font-size: 12px;
-}
-
-
-/* ================= FORM ================= */
-
-.demat-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.demat-form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.demat-form-group label {
-    color: #d8e1db;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.field-hint {
-    color: #5f6d64;
-    font-size: 10px;
-    margin-bottom: 8px;
-}
-
-.demat-form-group input {
-    width: 100%;
-    height: 44px;
-    box-sizing: border-box;
-    padding: 0 13px;
-    border-radius: 8px;
-    border: 1px solid #29342d;
-    outline: none;
-    background: #111813;
-    color: #e2e9e4;
-    font-size: 13px;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-.demat-form-group input::placeholder {
-    color: #536159;
-}
-
-.demat-form-group input:hover {
-    border-color: #344239;
-}
-
-.demat-form-group input:focus {
-    background: #131c16;
-    border-color: #68b846;
-    box-shadow: 0 0 0 3px rgba(166, 239, 95, 0.07);
-}
-
-
-/* ================= ACTIONS ================= */
-
-.demat-form-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 9px;
-    padding-top: 6px;
+    display: inline-block;
     margin-top: 4px;
 }
 
-.form-cancel-btn {
-    display: inline-flex;
+.demat-tile-footer {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    height: 40px;
-    padding: 0 17px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid #29342d;
-    background: transparent;
-    color: #8a978f;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.view-link {
+    color: var(--primary);
     text-decoration: none;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
+}
+.view-link:hover {
+    text-decoration: underline;
 }
 
-.form-cancel-btn:hover {
-    background: #171f1a;
-    color: #d7e0da;
-    border-color: #39463e;
+.action-link {
+    color: var(--text-muted);
+    font-size: 12.5px;
+    text-decoration: none;
+    font-weight: 500;
+}
+.action-link:hover {
+    color: var(--text-main);
 }
 
-.form-submit-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    height: 40px;
-    padding: 0 18px;
+.action-link-danger {
+    color: var(--danger);
+    background: none;
     border: none;
-    border-radius: 8px;
-    background: #12c48b;
-    color: #06110c;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 12.5px;
+    font-weight: 500;
     cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+}
+.action-link-danger:hover {
+    text-decoration: underline;
 }
 
-.form-submit-btn span {
-    font-size: 17px;
-    line-height: 0;
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--bg-surface);
+    border: 1px dashed var(--border-dark);
+    border-radius: 8px;
 }
 
-.form-submit-btn:hover {
-    background: #24d99e;
-    transform: translateY(-2px);
-    box-shadow: 0 9px 25px rgba(18, 196, 139, 0.14);
-}
-
-.form-submit-btn:active {
-    transform: translateY(0);
-}
-
-
-/* ================= INFO CARD ================= */
-
-.demat-info-card {
-    align-self: start;
-    padding: 23px;
-    border: 1px solid #202a23;
-    border-radius: 14px;
-    background:
-        linear-gradient(
-            145deg,
-            #101811,
-            #0c120f
-        );
-    animation: cardAppear 0.5s ease both;
-    animation-delay: 0.08s;
-}
-
-.info-icon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 18px;
-    border-radius: 11px;
-    background: #172819;
-    color: #a6ef5f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-}
-
-.demat-info-card h3 {
-    margin: 0;
+.empty-state h4 {
     font-size: 16px;
-    line-height: 1.35;
+    font-weight: 700;
+    margin-bottom: 6px;
 }
 
-.demat-info-card > p {
-    margin: 9px 0 0;
-    color: #68756d;
-    font-size: 11px;
-    line-height: 1.65;
-}
-
-.info-divider {
-    height: 1px;
-    background: #1d2620;
-    margin: 20px 0;
-}
-
-.info-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    margin-bottom: 13px;
-    color: #87938c;
-    font-size: 11px;
-    line-height: 1.45;
-}
-
-.info-item:last-child {
-    margin-bottom: 0;
-}
-
-.info-check {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #172819;
-    color: #a6ef5f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-}
-
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 900px) {
-
-    .add-demat-layout {
-        grid-template-columns: 1fr;
-        max-width: 700px;
-    }
-
-    .demat-info-card {
-        display: none;
-    }
-
-}
-
-
-@media (max-width: 600px) {
-
-    .add-demat-content {
-        padding: 22px 20px 40px;
-    }
-
-    .add-demat-heading h1 {
-        font-size: 27px;
-    }
-
-    .add-demat-card {
-        padding: 20px;
-    }
-
-    .demat-form-actions {
-        flex-direction: column-reverse;
-        align-items: stretch;
-    }
-
-    .form-cancel-btn,
-    .form-submit-btn {
-        width: 100%;
-    }
-
-}
-/* ================= EDIT DEMAT ================= */
-
-.edit-icon {
-    font-size: 19px;
-}
-
-.edit-info-icon {
-    font-size: 17px;
+.empty-state p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 18px;
 }

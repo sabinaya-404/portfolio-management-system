@@ -1,6 +1,6 @@
 # Local environment/config
 config/database.php
-
+database/portfolio_management.sql
 # IDE/editor files
 .vscode/
 .idea/

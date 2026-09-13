@@ -1,387 +1,146 @@
 <?php
-
-session_start();
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
-    exit;
-}
+require_once "includes/auth.php";
 require_once "config/database.php";
 
-$user_id = $_SESSION["user_id"];
-
+// 1. Fetch user's Demat accounts
 $stmt = $conn->prepare(
-    "SELECT id, account_name, account_holder, broker_name
+    "SELECT id, account_name, account_holder, broker_name, boid
      FROM demat_accounts
      WHERE user_id = ?
      ORDER BY created_at DESC"
 );
-
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $current_user_id);
 $stmt->execute();
-
 $demat_accounts = $stmt->get_result();
-
 $demat_count = $demat_accounts->num_rows;
+$stmt->close();
 
+// 2. Fetch company and market stats
+$company_count_res = $conn->query("SELECT COUNT(*) AS total FROM companies WHERE status = 'active'");
+$total_active_companies = $company_count_res->fetch_assoc()['total'] ?? 0;
+
+$page_title    = "Dashboard";
+$page_category = "OVERVIEW";
+$page_heading  = "Investor Dashboard";
+$active_page   = "dashboard";
+
+require_once "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Welcome Banner -->
+<div class="dashboard-card" style="display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #1e40af, #2563eb); color: #ffffff; border: none;">
+    <div>
+        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Welcome back, <?= htmlspecialchars($current_user_name) ?></h2>
+        <p style="color: #bfdbfe; font-size: 13px;">Manage your Demat portfolios, track market assets, and monitor financial news in one place.</p>
+    </div>
+    <div>
+        <a href="add_demat.php" class="btn-primary" style="background: #ffffff; color: #1e40af !important; border: 1px solid #ffffff;">+ Link Demat</a>
+    </div>
+</div>
 
-    <title>Dashboard | Portfolio Management System</title>
+<!-- Summary Metrics -->
+<section class="summary-grid">
+    <div class="summary-card">
+        <span>LINKED DEMAT ACCOUNTS</span>
+        <strong><?= $demat_count ?></strong>
+        <small><?= $demat_count > 0 ? 'Accounts active and synced' : 'No accounts linked yet' ?></small>
+    </div>
 
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
+    <div class="summary-card">
+        <span>LISTED COMPANIES</span>
+        <strong><?= number_format($total_active_companies) ?></strong>
+        <small>Active securities tracked</small>
+    </div>
 
-<body class="dashboard-page">
+    <div class="summary-card">
+        <span>MARKET STATUS</span>
+        <strong style="color: #15803d; font-size: 18px; display: flex; align-items: center; gap: 6px;">
+            <span style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+            Market Active
+        </strong>
+        <small>Standard Trading Hours</small>
+    </div>
+</section>
 
-<div class="dashboard-layout">
+<!-- Main Dashboard Grid -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-
-        <div class="sidebar-brand">
-            <div class="brand-icon">P</div>
-
-            <div>
-                <h2>Portfolio</h2>
-                <span>Manager</span>
-            </div>
+    <!-- Left: Demat Accounts Summary Table -->
+    <div class="dashboard-card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3>Linked Demat Accounts (<?= $demat_count ?>)</h3>
+            <a href="my_demat.php" class="view-link">Manage All →</a>
         </div>
 
+        <?php if ($demat_count === 0): ?>
+            <div class="empty-state">
+                <h4>No Demat accounts linked yet</h4>
+                <p>Add your 16-digit Beneficial Owner ID to start organizing your investments.</p>
+                <a href="add_demat.php" class="primary-button">+ Link New Demat</a>
+            </div>
+        <?php else: ?>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); height: 36px;">
+                            <th>ACCOUNT</th>
+                            <th>HOLDER</th>
+                            <th>BROKER</th>
+                            <th>BOID</th>
+                            <th style="text-align: right;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($acc = $demat_accounts->fetch_assoc()): ?>
+                            <tr style="border-bottom: 1px solid var(--border); height: 48px;">
+                                <td><strong><?= htmlspecialchars($acc["account_name"]) ?></strong></td>
+                                <td style="color: var(--text-muted);"><?= htmlspecialchars($acc["account_holder"]) ?></td>
+                                <td><?= htmlspecialchars($acc["broker_name"]) ?></td>
+                                <td><span class="boid-badge"><?= htmlspecialchars($acc["boid"]) ?></span></td>
+                                <td style="text-align: right;">
+                                    <a href="holdings.php?demat_id=<?= (int)$acc["id"] ?>" class="view-link">Portfolio →</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
 
-        <nav class="sidebar-nav">
-
-            <p class="nav-title">MENU</p>
-
-            <a href="dashboard.php" class="nav-link active">
-                <span class="nav-icon">⌂</span>
-                Dashboard
-            </a>
-
-            <a href="my_demat.php" class="nav-link">
-                <span class="nav-icon">▣</span>
-                My Demat
-            </a>
-
-            <a href="#" class="nav-link">
-                <span class="nav-icon">◈</span>
-                Holdings
-            </a>
-
-            <a href="#" class="nav-link">
-                <span class="nav-icon">◆</span>
-                Companies
-            </a>
-
-            <a href="#" class="nav-link">
-                <span class="nav-icon">▤</span>
-                IPO News
-            </a>
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <a href="#" class="nav-link">
-                <span class="nav-icon">⚙</span>
-                Settings
-            </a>
-
-            <a href="logout.php" class="nav-link logout-link">
-                <span class="nav-icon">↪</span>
-                Logout
-            </a>
-
+    <!-- Right: Quick Navigation & Services -->
+    <div class="dashboard-card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3>Quick Actions</h3>
         </div>
 
-    </aside>
-
-
-    <!-- Main Content -->
-    <main class="dashboard-main">
-
-        <!-- Top Bar -->
-        <header class="dashboard-header">
-
-            <div>
-                <p class="page-label">OVERVIEW</p>
-
-                <h1>Dashboard</h1>
-            </div>
-
-            <div class="user-profile">
-
-                <div class="user-avatar">
-                    <?= strtoupper(substr($_SESSION["user_name"], 0, 1)) ?>
-                </div>
-
-                <div class="user-info">
-                    <strong>
-                        <?= htmlspecialchars($_SESSION["user_name"]) ?>
-                    </strong>
-
-                    <span>Portfolio User</span>
-                </div>
-
-            </div>
-
-        </header>
-
-
-        <!-- Welcome -->
-        <section class="welcome-section">
-
-            <div>
-                <p class="welcome-label">WELCOME BACK</p>
-
-                <h2>
-                    Hello, <?= htmlspecialchars($_SESSION["user_name"]) ?> 👋
-                </h2>
-
-                <p>
-                    Here's an overview of your portfolio and Demat accounts.
-                </p>
-            </div>
-
-        </section>
-
-
-        <!-- Summary Cards -->
-        <section class="summary-grid">
-
-            <div class="summary-card">
-
-                <div class="card-icon">
-                    ◉
-                </div>
-
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="add_demat.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
                 <div>
-                    <span>Demat Accounts</span>
-                    <strong><?= $demat_count ?></strong>
-                    <small>Accounts connected</small>
+                    <strong style="display: block; font-size: 13px;">+ Link Demat Account</strong>
+                    <span style="font-size: 11.5px; color: var(--text-muted);">Add broker & BOID details</span>
                 </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <div class="card-icon">
-                    ◆
-                </div>
-
-                <div>
-                    <span>Companies Held</span>
-                    <strong>—</strong>
-                    <small>Companies in portfolio</small>
-                </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <div class="card-icon">
-                    ◈
-                </div>
-
-                <div>
-                    <span>Total Holdings</span>
-                    <strong>—</strong>
-                    <small>Across all accounts</small>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Main Dashboard Grid -->
-        <section class="dashboard-grid">
-
-            <!-- Demat Accounts -->
-            <div class="dashboard-card demat-card">
-
-                <div class="card-header">
-
-                    <div>
-                        <p class="section-label">ACCOUNTS</p>
-                        <h3>My Demat Accounts</h3>
-                    </div>
-
-                    <a href="my_demat.php" class="view-link">
-                        View all →
-                    </a>
-
-                </div>
-
-
-                <div class="demat-list">
-
-    <?php if ($demat_accounts->num_rows > 0): ?>
-
-        <?php while ($account = $demat_accounts->fetch_assoc()): ?>
-
-            <div class="demat-item">
-
-                <div class="demat-item-icon">
-                    ◉
-                </div>
-
-                <div class="demat-item-info">
-
-                    <strong>
-                        <?= htmlspecialchars($account["account_name"]) ?>
-                    </strong>
-
-                    <span>
-                        <?= htmlspecialchars($account["account_holder"]) ?>
-                    </span>
-
-                    <small>
-                        <?= htmlspecialchars($account["broker_name"]) ?>
-                    </small>
-
-                </div>
-
-                <a
-                    href="my_demat.php"
-                    class="demat-arrow"
-                    title="View account"
-                >
-                    →
-                </a>
-
-            </div>
-
-        <?php endwhile; ?>
-
-    <?php else: ?>
-
-        <div class="empty-state">
-
-            <div class="empty-icon">
-                ◉
-            </div>
-
-            <h4>No Demat accounts yet</h4>
-
-            <p>
-                Add a Demat account to start managing your portfolio.
-            </p>
-
-            <a href="my_demat.php" class="primary-button">
-                Add Demat Account
+                <span style="color: var(--text-muted); font-size: 14px;">→</span>
             </a>
 
-        </div>
+            <a href="companies.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
+                <div>
+                    <strong style="display: block; font-size: 13px;">Browse Companies</strong>
+                    <span style="font-size: 11.5px; color: var(--text-muted);">View listed stocks & prices</span>
+                </div>
+                <span style="color: var(--text-muted); font-size: 14px;">→</span>
+            </a>
 
-    <?php endif; ?>
+            <a href="ipo-news.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
+                <div>
+                    <strong style="display: block; font-size: 13px;">IPO News & Notices</strong>
+                    <span style="font-size: 11.5px; color: var(--text-muted);">Check upcoming issues</span>
+                </div>
+                <span style="color: var(--text-muted); font-size: 14px;">→</span>
+            </a>
+        </div>
+    </div>
 
 </div>
 
-            </div>
-
-
-            <!-- Quick Actions -->
-            <div class="dashboard-card">
-
-                <div class="card-header">
-
-                    <div>
-                        <p class="section-label">QUICK ACCESS</p>
-                        <h3>Portfolio</h3>
-                    </div>
-
-                </div>
-
-
-                <div class="quick-actions">
-
-                    <a href="#" class="quick-action">
-                        <span class="quick-icon">◈</span>
-
-                        <div>
-                            <strong>Holdings</strong>
-                            <small>View your stocks</small>
-                        </div>
-
-                        <span class="arrow">→</span>
-                    </a>
-
-
-                    <a href="#" class="quick-action">
-                        <span class="quick-icon">◆</span>
-
-                        <div>
-                            <strong>Companies</strong>
-                            <small>Browse companies</small>
-                        </div>
-
-                        <span class="arrow">→</span>
-                    </a>
-
-
-                    <a href="#" class="quick-action">
-                        <span class="quick-icon">▤</span>
-
-                        <div>
-                            <strong>IPO News</strong>
-                            <small>Latest IPO updates</small>
-                        </div>
-
-                        <span class="arrow">→</span>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Portfolio Placeholder -->
-        <section class="dashboard-card portfolio-preview">
-
-            <div class="card-header">
-
-                <div>
-                    <p class="section-label">PORTFOLIO</p>
-                    <h3>Portfolio Overview</h3>
-                </div>
-
-            </div>
-
-
-            <div class="table-placeholder">
-
-                <div class="placeholder-row placeholder-header">
-                    <span>Company</span>
-                    <span>Quantity</span>
-                    <span>Current Price</span>
-                    <span>Status</span>
-                </div>
-
-                <div class="placeholder-message">
-                    <span>No holdings to display yet.</span>
-                    <small>
-                        Your holdings will appear here once they are added.
-                    </small>
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-</body>
-</html>
+<?php require_once "includes/footer.php"; ?>
