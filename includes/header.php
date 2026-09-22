@@ -31,7 +31,7 @@ $page_title = $page_title ?? 'Portfolio Management System';
     <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Main Content Wrapper -->
-    <main id="main-content" class="dashboard-main">
+    <main id="main-content" class="dashboard-main <?= ($active_page ?? '') === 'dashboard' ? 'dashboard-motion' : '' ?>">
 
         <!-- Top Header Bar -->
         <header class="dashboard-header">

@@ -57,8 +57,8 @@ require_once "includes/header.php";
 
     <div class="summary-card">
         <span>MARKET STATUS</span>
-        <strong style="color: #15803d; font-size: 18px; display: flex; align-items: center; gap: 6px;">
-            <span style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+        <strong class="market-status" style="color: #15803d; font-size: 18px; display: flex; align-items: center; gap: 6px;">
+            <span class="market-status-dot" aria-hidden="true"></span>
             Market Active
         </strong>
         <small>Standard Trading Hours</small>
