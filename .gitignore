@@ -1,6 +1,11 @@
 # Local environment/config
 config/database.php
 database/portfolio_management.sql
+
+# Copilot / Spec Kit
+.github/
+.specify/
+
 # IDE/editor files
 .vscode/
 .idea/
@@ -11,4 +16,4 @@ Thumbs.db
 
 # Temporary files
 *.log
-*.tmpdatabase/portfolio_management.sql 
+*.tmp
