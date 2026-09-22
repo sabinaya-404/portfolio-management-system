@@ -7,7 +7,7 @@ $stmt = $conn->prepare(
     "SELECT id, account_name, account_holder, broker_name, boid, created_at
      FROM demat_accounts
      WHERE user_id = ?
-     ORDER BY created_at DESC"
+     ORDER BY created_at DESC, id DESC"
 );
 $stmt->bind_param("i", $current_user_id);
 $stmt->execute();
@@ -113,27 +113,37 @@ require_once "includes/header.php";
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById("dematSearchInput");
-    const cards = document.querySelectorAll(".demat-search-item");
+    const cards = Array.from(document.querySelectorAll(".demat-search-item"), card => ({
+        element: card,
+        searchData: card.getAttribute("data-search") || ""
+    }));
     const noResults = document.getElementById("noSearchResults");
+    let filterFrame = null;
 
     if (searchInput) {
         searchInput.addEventListener("input", function() {
             const query = this.value.toLowerCase().trim();
-            let visibleCount = 0;
 
-            cards.forEach(card => {
-                const searchData = card.getAttribute("data-search") || "";
-                if (searchData.includes(query)) {
-                    card.style.display = "";
-                    visibleCount++;
-                } else {
-                    card.style.display = "none";
-                }
-            });
-
-            if (noResults) {
-                noResults.style.display = (visibleCount === 0 && cards.length > 0) ? "block" : "none";
+            if (filterFrame !== null) {
+                cancelAnimationFrame(filterFrame);
             }
+
+            filterFrame = requestAnimationFrame(function() {
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const isVisible = card.searchData.includes(query);
+                    card.element.style.display = isVisible ? "" : "none";
+                    if (isVisible) {
+                        visibleCount++;
+                    }
+                });
+
+                if (noResults) {
+                    noResults.style.display = (visibleCount === 0 && cards.length > 0) ? "block" : "none";
+                }
+                filterFrame = null;
+            });
         });
     }
 });

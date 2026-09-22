@@ -4,15 +4,18 @@ require_once "config/database.php";
 
 // 1. Fetch user's Demat accounts
 $stmt = $conn->prepare(
-    "SELECT id, account_name, account_holder, broker_name, boid
+    "SELECT id, account_name, account_holder, broker_name, boid,
+            (SELECT COUNT(*) FROM demat_accounts WHERE user_id = ?) AS total_count
      FROM demat_accounts
      WHERE user_id = ?
-     ORDER BY created_at DESC"
+     ORDER BY created_at DESC, id DESC
+     LIMIT 10"
 );
-$stmt->bind_param("i", $current_user_id);
+$stmt->bind_param("ii", $current_user_id, $current_user_id);
 $stmt->execute();
 $demat_accounts = $stmt->get_result();
-$demat_count = $demat_accounts->num_rows;
+$demat_rows = $demat_accounts->fetch_all(MYSQLI_ASSOC);
+$demat_count = $demat_rows ? (int)$demat_rows[0]["total_count"] : 0;
 $stmt->close();
 
 // 2. Fetch company and market stats
@@ -91,7 +94,7 @@ require_once "includes/header.php";
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($acc = $demat_accounts->fetch_assoc()): ?>
+                        <?php foreach ($demat_rows as $acc): ?>
                             <tr style="border-bottom: 1px solid var(--border); height: 48px;">
                                 <td><strong><?= htmlspecialchars($acc["account_name"]) ?></strong></td>
                                 <td style="color: var(--text-muted);"><?= htmlspecialchars($acc["account_holder"]) ?></td>
@@ -101,7 +104,7 @@ require_once "includes/header.php";
                                     <a href="holdings.php?demat_id=<?= (int)$acc["id"] ?>" class="view-link">Portfolio →</a>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

@@ -108,7 +108,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`) VA
 --
 ALTER TABLE `companies`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `symbol` (`symbol`);
+  ADD UNIQUE KEY `symbol` (`symbol`),
+  ADD KEY `idx_companies_status` (`status`);
 
 --
 -- Indexes for table `demat_accounts`
@@ -116,7 +117,8 @@ ALTER TABLE `companies`
 ALTER TABLE `demat_accounts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `boid` (`boid`),
-  ADD KEY `fk_demat_user` (`user_id`);
+  ADD KEY `fk_demat_user` (`user_id`),
+  ADD KEY `idx_demat_user_created` (`user_id`,`created_at`,`id`);
 
 --
 -- Indexes for table `holdings`
