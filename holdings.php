@@ -79,9 +79,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             holdings_redirect((int) $posted_demat_id, $message, false);
         }
+
+        $company_stmt = $conn->prepare(
+            "SELECT id FROM companies WHERE id = ? AND status = 'active' LIMIT 1"
+        );
+        $company_stmt->bind_param("i", $company_id);
+        $company_stmt->execute();
+        $company_exists = (bool) $company_stmt->get_result()->fetch_assoc();
+        $company_stmt->close();
+
+        if (!$company_exists) {
+            $message = "Select a valid active company.";
+            if ($is_ajax) {
+                holdings_response(false, $message, [], 422);
+            }
+            holdings_redirect((int) $posted_demat_id, $message, false);
+        }
+
         $mutation = $conn->prepare("INSERT INTO holdings (demat_id, company_id, quantity) VALUES (?, ?, ?)");
         $mutation->bind_param("iii", $posted_demat_id, $company_id, $quantity);
-        $mutation->execute();
+        if (!$mutation->execute()) {
+            $mutation->close();
+            $message = "Unable to add holding. It may already exist for this account.";
+            if ($is_ajax) {
+                holdings_response(false, $message, [], 409);
+            }
+            holdings_redirect((int) $posted_demat_id, $message, false);
+        }
         $message = "Holding added.";
         $mutation->close();
     } elseif ($action === "edit") {
@@ -95,7 +119,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         $mutation = $conn->prepare("UPDATE holdings SET quantity = ? WHERE id = ? AND demat_id = ?");
         $mutation->bind_param("iii", $quantity, $holding_id, $posted_demat_id);
-        $mutation->execute();
+        if (!$mutation->execute()) {
+            $mutation->close();
+            $message = "Unable to update holding.";
+            if ($is_ajax) {
+                holdings_response(false, $message, [], 500);
+            }
+            holdings_redirect((int) $posted_demat_id, $message, false);
+        }
         if ($mutation->affected_rows < 1) {
             $mutation->close();
             $message = "Holding not found or unchanged.";
@@ -117,7 +148,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         $mutation = $conn->prepare("DELETE FROM holdings WHERE id = ? AND demat_id = ?");
         $mutation->bind_param("ii", $holding_id, $posted_demat_id);
-        $mutation->execute();
+        if (!$mutation->execute()) {
+            $mutation->close();
+            $message = "Unable to delete holding.";
+            if ($is_ajax) {
+                holdings_response(false, $message, [], 500);
+            }
+            holdings_redirect((int) $posted_demat_id, $message, false);
+        }
         if ($mutation->affected_rows < 1) {
             $mutation->close();
             $message = "Holding not found.";

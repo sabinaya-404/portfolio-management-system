@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once "includes/session.php";
 
 // If already logged in, redirect to dashboard
 if (isset($_SESSION["user_id"])) {
@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $user = $result->fetch_assoc();
 
             if (password_verify($password, $user["password"])) {
+                session_regenerate_id(true);
                 $_SESSION["user_id"]   = (int)$user["id"];
                 $_SESSION["user_name"] = $user["name"];
                 $_SESSION["role"]      = $user["role"];

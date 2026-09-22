@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    require_once "includes/session.php";
 }
 
 // Unset all session array values

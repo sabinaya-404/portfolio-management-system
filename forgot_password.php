@@ -1,11 +1,10 @@
 <?php
 date_default_timezone_set("Asia/Kathmandu");
-session_start();
+require_once "includes/session.php";
 require_once "config/database.php";
 
 $message = "";
 $message_type = "";
-$reset_link = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST["email"] ?? "");
@@ -38,11 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute();
             $stmt->close();
 
-            $reset_link = "reset_password.php?token=" . urlencode($token);
-            $message = "A reset token has been generated. Use the link below to set your new password.";
+            $message = "If an account exists with that email, a reset request has been recorded. This local build does not deliver reset links; configure trusted email delivery before using password recovery in production.";
             $message_type = "success";
         } else {
-            $message = "If an account exists with that email, a password reset link has been created.";
+            $message = "If an account exists with that email, a reset request has been recorded. This local build does not deliver reset links; configure trusted email delivery before using password recovery in production.";
             $message_type = "success";
         }
     }
@@ -71,13 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php if (!empty($message)): ?>
             <div class="alert <?= $message_type === 'success' ? 'alert-success' : 'alert-error' ?>" role="<?= $message_type === 'success' ? 'status' : 'alert' ?>" aria-live="polite">
                 <?= htmlspecialchars($message) ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($reset_link)): ?>
-            <div class="reset-link-box">
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Click here to reset your password:</p>
-                <a href="<?= htmlspecialchars($reset_link) ?>">Proceed to Reset Password →</a>
             </div>
         <?php endif; ?>
 

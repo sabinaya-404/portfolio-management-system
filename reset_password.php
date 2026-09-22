@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Kathmandu");
-session_start();
+require_once "includes/session.php";
 require_once "config/database.php";
 
 $message = "";
