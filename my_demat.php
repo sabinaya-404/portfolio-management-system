@@ -30,11 +30,11 @@ require_once "includes/header.php";
 
 <!-- Flash Alerts -->
 <?php if (!empty($flash_success)): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($flash_success) ?></div>
+    <div class="alert alert-success" role="status" aria-live="polite"><?= htmlspecialchars($flash_success) ?></div>
 <?php endif; ?>
 
 <?php if (!empty($flash_error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($flash_error) ?></div>
+    <div class="alert alert-error" role="alert" aria-live="polite"><?= htmlspecialchars($flash_error) ?></div>
 <?php endif; ?>
 
 <!-- Top Toolbar: Search & Add Button -->
@@ -42,11 +42,14 @@ require_once "includes/header.php";
     <div style="flex: 1; max-width: 360px; position: relative;">
         <input 
             type="text" 
-            id="dematSearchInput" 
-            placeholder="Search by name, broker, or BOID..." 
-            style="width: 100%; padding: 9px 12px 9px 36px; background: #ffffff; border: 1px solid var(--border-dark); border-radius: 6px; font-size: 13px; outline: none;"
+            id="dematSearchInput"
+            name="demat_search"
+            aria-label="Search Demat accounts"
+            autocomplete="off"
+            placeholder="Search by name, broker, or BOID…"
+            style="width: 100%; padding: 9px 12px 9px 36px; background: #ffffff; border: 1px solid var(--border-dark); border-radius: 6px; font-size: 13px;"
         >
-        <svg style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg aria-hidden="true" style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8" stroke-width="2"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
         </svg>
@@ -94,7 +97,7 @@ require_once "includes/header.php";
                         <form method="POST" action="delete_demat.php" style="display:inline;" onsubmit="return confirm('Delete this Demat account? All associated holdings records will be removed.');">
                             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                             <input type="hidden" name="id" value="<?= (int)$demat["id"] ?>">
-                            <button type="submit" class="action-link-danger">Delete</button>
+                            <button type="submit" class="action-link-danger" aria-label="Delete <?= htmlspecialchars($demat["account_name"]) ?> Demat account">Delete</button>
                         </form>
                     </div>
                 </div>

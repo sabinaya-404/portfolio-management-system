@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateThemeUI(theme) {
         if (!themeBtn) return;
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute("content", theme === "dark" ? "#0b1120" : "#f4f6f9");
+        }
         if (theme === "dark") {
             sunIcon.style.display = "inline-block";
             moonIcon.style.display = "none";
@@ -32,7 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const nextTheme = current === "dark" ? "light" : "dark";
 
             document.documentElement.setAttribute("data-theme", nextTheme);
-            localStorage.setItem("portfolio_theme", nextTheme);
+            try {
+                localStorage.setItem("portfolio_theme", nextTheme);
+            } catch (error) {
+                // Keep the current theme for this page when storage is unavailable.
+            }
             updateThemeUI(nextTheme);
         });
     }

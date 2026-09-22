@@ -69,7 +69,7 @@ require_once "includes/header.php";
         </p>
 
         <?php if (!empty($message)): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($message) ?></div>
+            <div class="alert alert-error" role="alert" aria-live="polite"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
         <form method="POST" action="add_demat.php">
@@ -77,22 +77,22 @@ require_once "includes/header.php";
 
             <div class="form-group">
                 <label for="account_name">Account Nickname</label>
-                <input type="text" id="account_name" name="account_name" value="<?= htmlspecialchars($account_name) ?>" placeholder="e.g. Personal Portfolio" required>
+                <input type="text" id="account_name" name="account_name" value="<?= htmlspecialchars($account_name) ?>" placeholder="e.g. Personal Portfolio" autocomplete="off" required>
             </div>
 
             <div class="form-group">
                 <label for="account_holder">Account Holder Name</label>
-                <input type="text" id="account_holder" name="account_holder" value="<?= htmlspecialchars($account_holder) ?>" placeholder="Full name registered with DP" required>
+                <input type="text" id="account_holder" name="account_holder" value="<?= htmlspecialchars($account_holder) ?>" placeholder="Full name registered with DP" autocomplete="name" required>
             </div>
 
             <div class="form-group">
                 <label for="broker_name">Broker / Depository Participant (DP)</label>
-                <input type="text" id="broker_name" name="broker_name" value="<?= htmlspecialchars($broker_name) ?>" placeholder="e.g. Naasa Securities (Broker 58)" required>
+                <input type="text" id="broker_name" name="broker_name" value="<?= htmlspecialchars($broker_name) ?>" placeholder="e.g. Naasa Securities (Broker 58)" autocomplete="organization" required>
             </div>
 
             <div class="form-group">
                 <label for="boid">16-Digit BOID</label>
-                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" value="<?= htmlspecialchars($boid) ?>" placeholder="1301234567890123" required>
+                <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" value="<?= htmlspecialchars($boid) ?>" placeholder="1301234567890123" autocomplete="off" required>
                 <small style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display: block;">
                     Consists of 8-digit DP ID + 8-digit Client ID.
                 </small>

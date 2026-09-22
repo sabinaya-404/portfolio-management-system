@@ -1,4 +1,5 @@
 :root {
+    color-scheme: light;
     --bg-app: #f4f6f9;
     --bg-surface: #ffffff;
     --bg-surface-secondary: #f8fafc;
@@ -27,6 +28,7 @@
    DARK THEME PALETTE (SLATE / NAVY ENTERPRISE)
    ========================================================= */
 [data-theme="dark"] {
+    color-scheme: dark;
     --bg-app: #0b1120;             /* Midnight Navy */
     --bg-surface: #1e293b;         /* Elevated Slate Card */
     --bg-surface-secondary: #0f172a;
@@ -70,7 +72,7 @@
     gap: 6px;
     font-size: 12px;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .theme-toggle-btn:hover {
@@ -81,6 +83,44 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-tap-highlight-color: rgba(37, 99, 235, 0.2);
+    touch-action: manipulation;
+}
+
+.skip-link {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    z-index: 1000;
+    background: var(--primary);
+    color: #ffffff;
+    border-radius: 6px;
+    transition: transform 0.15s ease;
+}
+
+.skip-link:focus-visible {
+    top: 8px;
+    left: 8px;
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    transform: translateY(0);
 }
 
 body {
@@ -176,8 +216,23 @@ body {
     color: var(--text-main);
     font-size: 13.5px;
     font-family: inherit;
-    outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible,
+.theme-toggle-btn:focus-visible,
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.primary-button:focus-visible,
+.nav-link:focus-visible,
+.view-link:focus-visible,
+.action-link:focus-visible,
+.action-link-danger:focus-visible,
+.password-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 2px;
 }
 
 .form-group input:focus,
@@ -245,7 +300,7 @@ body {
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-primary, .primary-button {
@@ -387,7 +442,7 @@ body {
     font-weight: 500;
     border-radius: 6px;
     margin-bottom: 2px;
-    transition: all 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .nav-link:hover {
@@ -755,4 +810,63 @@ body {
 /* 6. Form Input Focus Ring Transition */
 .form-group input, .form-group select {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .dashboard-layout {
+        display: block;
+    }
+
+    .dashboard-main {
+        margin-left: 0;
+    }
+
+    .sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nav-title {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-main {
+        padding: 20px 16px 36px;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        gap: 16px;
+        flex-direction: column;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .accounts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

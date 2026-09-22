@@ -48,12 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6f9">
     <title>Login | Portfolio Management System</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<div class="auth-page">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" class="auth-page">
     <div class="auth-card">
         <div class="auth-logo">
             <div class="brand-icon" style="margin: 0 auto 12px; width: 42px; height: 42px; font-size: 20px;">P</div>
@@ -62,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
 
         <?php if (!empty($message)): ?>
-            <div class="alert alert-error">
+            <div class="alert alert-error" role="alert" aria-live="polite">
                 <?= htmlspecialchars($message) ?>
             </div>
         <?php endif; ?>
@@ -90,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             Don't have an account? <a href="register.php">Create an account</a>
         </div>
     </div>
-</div>
+</main>
 
 </body>
 </html>
