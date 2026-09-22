@@ -1,5 +1,6 @@
 <?php
 $page_title = $page_title ?? 'Portfolio Management System';
+$asset_path = $asset_path ?? 'assets/';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +9,7 @@ $page_title = $page_title ?? 'Portfolio Management System';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f4f6f9">
     <title><?= htmlspecialchars($page_title) ?> | Portfolio Manager</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="<?= htmlspecialchars($asset_path) ?>css/style.css">
 
     <!-- Instant Theme Loader (Prevents White Flash in Dark Mode) -->
     <script>
