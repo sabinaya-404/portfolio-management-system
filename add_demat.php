@@ -9,16 +9,18 @@ $broker_name = "";
 $boid = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("Invalid CSRF token.");
-    }
+    $account_name   = trim((string) ($_POST["account_name"] ?? ""));
+    $account_holder = trim((string) ($_POST["account_holder"] ?? ""));
+    $broker_name    = trim((string) ($_POST["broker_name"] ?? ""));
+    $boid           = trim((string) ($_POST["boid"] ?? ""));
 
-    $account_name   = trim($_POST["account_name"] ?? "");
-    $account_holder = trim($_POST["account_holder"] ?? "");
-    $broker_name    = trim($_POST["broker_name"] ?? "");
-    $boid           = trim($_POST["boid"] ?? "");
-
-    if (empty($account_name) || empty($account_holder) || empty($broker_name) || empty($boid)) {
+    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+        $message = "Your session expired. Refresh the page and try again.";
+    } elseif (
+        $account_name === "" || $account_holder === "" || $broker_name === "" || $boid === ""
+        || mb_strlen($account_name) > 100 || mb_strlen($account_holder) > 100
+        || mb_strlen($broker_name) > 100
+    ) {
         $message = "Please fill in all fields.";
     } elseif (!preg_match('/^[0-9]{16}$/', $boid)) {
         $message = "BOID must be exactly 16 numeric digits.";
@@ -73,7 +75,7 @@ require_once "includes/header.php";
         <?php endif; ?>
 
         <form method="POST" action="add_demat.php">
-            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
 
             <div class="form-group">
                 <label for="account_name">Account Nickname</label>

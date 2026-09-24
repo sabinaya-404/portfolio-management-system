@@ -1,100 +1,34 @@
-#  Portfolio Management System
+# Portfolio Management System
 
-A web-based **Portfolio Management System** developed as an academic project.
+A small procedural PHP 8.x and MySQL/MariaDB application for organizing user-owned Demat accounts and holdings. It is designed for local development with XAMPP and uses MySQLi, server-rendered HTML, CSS, and vanilla JavaScript.
 
-The system is designed to help users manage multiple Demat accounts and view their holdings in an organized manner. It also provides portfolio information and IPO news managed by an administrator.
+## Implemented scope
 
->  **Project Status:** Under Development
+- User registration, login, logout, session protection, CSRF protection, and password reset tokens.
+- Multiple user-owned Demat accounts with add, edit, list, and delete workflows.
+- Holdings per Demat account with ownership checks, add/edit/delete actions, and calculated market value.
+- Authenticated company directory with search and status filtering.
+- Server-authorized administrator dashboard and company management, including activation/deactivation without deleting holdings.
+- Administrator IPO/news management with published-only authenticated user viewing.
+- Basic administrator user role management with last-admin protection.
+- Read-only current-state portfolio reports.
+- Responsive shared layout with accessible navigation, alerts, tables, skip links, and light/dark theme support.
 
----
+## Database
 
-## 📌 About the Project
+Import `database/portfolio_management.sql` into MySQL or MariaDB, then copy `config/database.example.php` to `config/database.php` and set the local connection values. The schema contains `users`, `demat_accounts`, `holdings`, `companies`, `password_resets`, and `ipo_news`; foreign keys and unique constraints preserve ownership and data integrity.
 
-Managing investments across multiple Demat accounts can make it difficult to keep track of holdings and portfolio information in one place.
+The SQL dump includes one minimal `ipo_news` table. It stores the entry type (`ipo` or `news`), title, content, publication date, optional source URL, publication status, administrator creator, and timestamps. Its `created_by` foreign key references `users.id`; no separate editorial, notification, or external-content tables are used.
 
-The **Portfolio Management System** aims to provide a centralized platform where users can manage their Demat accounts and view the companies and holdings associated with them.
+## Local development
 
-The system also provides an **IPO News** section where users can view IPO-related information managed by an administrator.
+1. Start Apache and MySQL in XAMPP.
+2. Import the SQL dump and configure the database connection.
+3. Open `http://localhost/portfolio-management-system/`.
+4. Create a user account. To test administrator authorization, set that user's existing `role` column to `admin` directly in the database.
 
----
-
-## Objectives
-
-The main objectives of this project are to:
-
-- Provide a centralized system for managing multiple Demat accounts.
-- Allow users to add and remove their Demat accounts.
-- Allow users to view holdings associated with each Demat account.
-- Provide a summarized view of the user's portfolio.
-- Allow users to search for companies already present in their portfolio.
-- Provide IPO-related news in one place.
-- Allow administrators to manage company and IPO news information.
-
----
-
-##  Features
-
-###  User
-
-- [x] User registration
-- [x] User login
-- [x] User logout
-- [x] Multiple Demat account support
-- [x] Add Demat account
-- [x] Remove Demat account
-- [ ] View Demat account holdings
-- [ ] Portfolio summary
-- [ ] Company search
-- [ ] View IPO news
-
-### Administrator
-
-- [ ] Administrator authentication
-- [ ] Manage companies
-- [ ] Manage IPO news
-- [ ] Add IPO news
-- [ ] Edit IPO news
-- [ ] Delete IPO news
-
----
-
-## 🛠️ Technologies Used
-
-| Technology | Purpose |
-|---|---|
-| HTML | Structure and frontend |
-| CSS | Styling and UI |
-| JavaScript | Client-side interactions |
-| PHP | Backend development |
-| MySQL | Database management |
-| XAMPP | Local development environment |
-| Git | Version control |
-| GitHub | Source code management |
-
----
-
-## Project Structure
+Validate PHP syntax from the repository root with:
 
 ```text
-portfolio-management-system/
-│
-├── assets/
-│   ├── css/
-│   └── js/
-│
-├── config/
-│   └── database.example.php
-│
-├── database/
-│   └── portfolio_management.sql
-│
-├── login.php
-├── register.php
-├── logout.php
-├── dashboard.php
-├── add_demat.php
-├── edit_demat.php
-├── delete_demat.php
-│
-├── .gitignore
-└── README.md
+C:\xampp\php\php.exe -l <file>.php
+```

@@ -52,6 +52,10 @@ $base_path = $base_path ?? '';
                 </svg>
                 Admin Panel
             </a>
+            <a href="<?= $base_path ?>admin/companies.php" class="nav-link">Manage Companies</a>
+            <a href="<?= $base_path ?>admin/news.php" class="nav-link">Manage IPO & News</a>
+            <a href="<?= $base_path ?>admin/users.php" class="nav-link">Manage Users</a>
+            <a href="<?= $base_path ?>admin/reports.php" class="nav-link">Reports</a>
         <?php endif; ?>
 
         <a href="<?= $base_path ?>ipo-news.php" class="nav-link <?= ($active_page === 'ipo') ? 'active' : '' ?>">
@@ -64,13 +68,16 @@ $base_path = $base_path ?? '';
     </nav>
 
     <div class="sidebar-bottom">
-        <a href="<?= $base_path ?>logout.php" class="nav-link logout-link">
+        <form method="post" action="<?= $base_path ?>logout.php" class="logout-form">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+            <button type="submit" class="nav-link logout-link">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
                 <line x1="21" x2="9" y1="12" y2="12"/>
             </svg>
-            Logout
-        </a>
+                Logout
+            </button>
+        </form>
     </div>
 </aside>

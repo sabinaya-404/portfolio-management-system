@@ -25,34 +25,47 @@ if (empty($token)) {
         $message = "This password reset link is invalid or has expired.";
         $message_type = "error";
     } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $password         = $_POST["password"] ?? "";
-        $confirm_password = $_POST["confirm_password"] ?? "";
-
-        if (strlen($password) < 6) {
-            $message = "Password must be at least 6 characters long.";
-            $message_type = "error";
-        } elseif ($password !== $confirm_password) {
-            $message = "Passwords do not match.";
+        if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+            $message = "Your session expired or the request was invalid. Please try again.";
             $message_type = "error";
         } else {
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            $user_id = (int)$reset["user_id"];
+            $password         = $_POST["password"] ?? "";
+            $confirm_password = $_POST["confirm_password"] ?? "";
 
-            // Update user password
-            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-            $stmt->bind_param("si", $password_hash, $user_id);
-            $stmt->execute();
-            $stmt->close();
+            if (strlen($password) < 6) {
+                $message = "Password must be at least 6 characters long.";
+                $message_type = "error";
+            } elseif (strlen($password) > 72) {
+                $message = "Password cannot exceed 72 characters.";
+                $message_type = "error";
+            } elseif ($password !== $confirm_password) {
+                $message = "Passwords do not match.";
+                $message_type = "error";
+            } else {
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $user_id = (int)$reset["user_id"];
 
-            // Invalidate token
-            $stmt = $conn->prepare("DELETE FROM password_resets WHERE id = ?");
-            $stmt->bind_param("i", $reset["id"]);
-            $stmt->execute();
-            $stmt->close();
+                // Update user password
+                $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                $stmt->bind_param("si", $password_hash, $user_id);
+                $stmt->execute();
+                $stmt->close();
 
-            $message = "Your password has been reset successfully! You can now log in.";
-            $message_type = "success";
-            $reset = null;
+                // Invalidate token
+                $stmt = $conn->prepare("DELETE FROM password_resets WHERE id = ?");
+                $stmt->bind_param("i", $reset["id"]);
+                $stmt->execute();
+                $stmt->close();
+
+                // Invalidate current session and regenerate session ID
+                $_SESSION = [];
+                session_regenerate_id(true);
+                $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+
+                $message = "Your password has been reset successfully! You can now log in.";
+                $message_type = "success";
+                $reset = null;
+            }
         }
     }
 }
@@ -85,14 +98,16 @@ if (empty($token)) {
 
         <?php if (!empty($reset)): ?>
             <form method="POST" action="reset_password.php?token=<?= urlencode($token) ?>">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+
                 <div class="form-group">
                     <label for="password">New Password</label>
-                    <input type="password" id="password" name="password" placeholder="At least 6 characters" required autocomplete="new-password">
+                    <input type="password" id="password" name="password" maxlength="72" placeholder="At least 6 characters" required autocomplete="new-password">
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Confirm New Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat your new password" required autocomplete="new-password">
+                    <input type="password" id="confirm_password" name="confirm_password" maxlength="72" placeholder="Repeat your new password" required autocomplete="new-password">
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">

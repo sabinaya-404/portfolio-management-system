@@ -12,10 +12,12 @@ require_once "config/database.php";
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email    = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
+    $email    = trim((string) ($_POST["email"] ?? ""));
+    $password = (string) ($_POST["password"] ?? "");
 
-    if (empty($email) || empty($password)) {
+    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+        $message = "Your session expired or the request was invalid. Please try again.";
+    } elseif (empty($email) || empty($password)) {
         $message = "Please enter both email and password.";
     } else {
         $stmt = $conn->prepare("SELECT id, name, password, role FROM users WHERE email = ? LIMIT 1");
@@ -71,6 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
         <form method="POST" action="login.php">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" placeholder="name@example.com" required autocomplete="email">

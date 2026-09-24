@@ -5,8 +5,10 @@ $dbname = "portfolio_management";
 $username = "root";
 $password = "";
 
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+try {
+    $conn = new mysqli($host, $username, $password, $dbname);
+    $conn->set_charset("utf8mb4");
+} catch (mysqli_sql_exception $e) {
+    http_response_code(503);
+    die("Database service is currently unavailable. Please ensure MySQL is running and try again later.");
 }

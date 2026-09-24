@@ -3,6 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     require_once "includes/session.php";
 }
 
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    header("Location: login.php");
+    exit;
+}
+
 // Unset all session array values
 $_SESSION = [];
 

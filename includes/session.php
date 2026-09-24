@@ -18,3 +18,16 @@ if (session_status() === PHP_SESSION_NONE) {
 
     session_start();
 }
+
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
+if (!function_exists("verify_csrf_token")) {
+    function verify_csrf_token(?string $token): bool
+    {
+        return !empty($token)
+            && !empty($_SESSION["csrf_token"])
+            && hash_equals((string) $_SESSION["csrf_token"], (string) $token);
+    }
+}

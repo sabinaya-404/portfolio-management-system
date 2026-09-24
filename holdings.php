@@ -346,6 +346,7 @@ require_once "includes/header.php";
                             <th scope="col" class="numeric-cell">QUANTITY</th>
                             <th scope="col" class="numeric-cell">PRICE</th>
                             <th scope="col" class="numeric-cell">MARKET VALUE</th>
+                            <th scope="col" class="numeric-cell">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>

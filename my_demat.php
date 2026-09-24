@@ -13,7 +13,6 @@ $stmt->bind_param("i", $current_user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $demat_count = $result->num_rows;
-$stmt->close();
 
 // Check for session flash messages
 $flash_success = $_SESSION['flash_success'] ?? "";
@@ -95,7 +94,7 @@ require_once "includes/header.php";
                         <a href="edit_demat.php?id=<?= (int)$demat["id"] ?>" class="action-link">Edit</a>
                         
                         <form method="POST" action="delete_demat.php" style="display:inline;" onsubmit="return confirm('Delete this Demat account? All associated holdings records will be removed.');">
-                            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
                             <input type="hidden" name="id" value="<?= (int)$demat["id"] ?>">
                             <button type="submit" class="action-link-danger" aria-label="Delete <?= htmlspecialchars($demat["account_name"]) ?> Demat account">Delete</button>
                         </form>
@@ -111,6 +110,7 @@ require_once "includes/header.php";
         <p>Try searching with a different account name, broker, or BOID.</p>
     </div>
 <?php endif; ?>
+<?php $result->free(); $stmt->close(); ?>
 
 <!-- Vanilla JS Instant Search -->
 <script>

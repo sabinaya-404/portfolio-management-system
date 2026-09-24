@@ -12,40 +12,50 @@ $message = "";
 $message_type = "error";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name             = trim($_POST["name"] ?? "");
-    $email            = trim($_POST["email"] ?? "");
-    $password         = $_POST["password"] ?? "";
-    $confirm_password = $_POST["confirm_password"] ?? "";
-
-    if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
-        $message = "Please fill in all required fields.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $message = "Please enter a valid email address.";
-    } elseif (strlen($password) < 6) {
-        $message = "Password must be at least 6 characters long.";
-    } elseif ($password !== $confirm_password) {
-        $message = "Passwords do not match.";
+    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+        $message = "Your session expired or the request was invalid. Please try again.";
     } else {
-        $check = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-        $check->bind_param("s", $email);
-        $check->execute();
-        
-        if ($check->get_result()->num_rows > 0) {
-            $message = "An account with this email already exists.";
-        } else {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $name, $email, $hashedPassword);
+        $name             = trim($_POST["name"] ?? "");
+        $email            = trim($_POST["email"] ?? "");
+        $password         = $_POST["password"] ?? "";
+        $confirm_password = $_POST["confirm_password"] ?? "";
 
-            if ($stmt->execute()) {
-                $message = "Registration successful! You can now log in.";
-                $message_type = "success";
+        if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
+            $message = "Please fill in all required fields.";
+        } elseif (mb_strlen($name) > 100) {
+            $message = "Full name cannot exceed 100 characters.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Please enter a valid email address.";
+        } elseif (strlen($email) > 150) {
+            $message = "Email address cannot exceed 150 characters.";
+        } elseif (strlen($password) < 6) {
+            $message = "Password must be at least 6 characters long.";
+        } elseif (strlen($password) > 72) {
+            $message = "Password cannot exceed 72 characters.";
+        } elseif ($password !== $confirm_password) {
+            $message = "Passwords do not match.";
+        } else {
+            $check = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+            $check->bind_param("s", $email);
+            $check->execute();
+            
+            if ($check->get_result()->num_rows > 0) {
+                $message = "An account with this email already exists.";
             } else {
-                $message = "Registration failed. Please try again.";
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $name, $email, $hashedPassword);
+
+                if ($stmt->execute()) {
+                    $message = "Registration successful! You can now log in.";
+                    $message_type = "success";
+                } else {
+                    $message = "Registration failed. Please try again.";
+                }
+                $stmt->close();
             }
-            $stmt->close();
+            $check->close();
         }
-        $check->close();
     }
 }
 ?>
@@ -76,24 +86,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
         <form method="POST" action="register.php">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+                <input type="text" id="name" name="name" maxlength="100" placeholder="John Doe" required autocomplete="name">
             </div>
 
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="name@example.com" required autocomplete="email">
+                <input type="email" id="email" name="email" maxlength="150" placeholder="name@example.com" required autocomplete="email">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="At least 6 characters" required autocomplete="new-password">
+                <input type="password" id="password" name="password" maxlength="72" placeholder="At least 6 characters" required autocomplete="new-password">
             </div>
 
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat your password" required autocomplete="new-password">
+                <input type="password" id="confirm_password" name="confirm_password" maxlength="72" placeholder="Repeat your password" required autocomplete="new-password">
             </div>
 
             <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">

@@ -47,6 +47,9 @@ require_once "../includes/header.php";
         Add listed companies, update their details, or deactivate them without removing existing portfolio holdings.
     </p>
     <a href="companies.php" class="primary-button">Manage Companies</a>
+    <a href="news.php" class="primary-button" style="margin-left: 8px;">Manage IPO & News</a>
+    <a href="users.php" class="primary-button" style="margin-left: 8px;">Manage Users</a>
+    <a href="reports.php" class="primary-button" style="margin-left: 8px;">View Reports</a>
 </section>
 
 <?php require_once "../includes/footer.php"; ?>

@@ -5,43 +5,56 @@ require_once "config/database.php";
 
 $message = "";
 $message_type = "";
+$reset_link = "";
+$is_local_dev = in_array($_SERVER["HTTP_HOST"] ?? "", ["localhost", "127.0.0.1"], true)
+    || in_array($_SERVER["SERVER_NAME"] ?? "", ["localhost", "127.0.0.1"], true);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST["email"] ?? "");
-
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $message = "Please enter a valid email address.";
+    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+        $message = "Your session expired or the request was invalid. Please try again.";
         $message_type = "error";
     } else {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $user = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+        $email = trim($_POST["email"] ?? "");
 
-        if ($user) {
-            $user_id    = (int)$user["id"];
-            $token      = bin2hex(random_bytes(32));
-            $token_hash = hash("sha256", $token);
-            $expires_at = date("Y-m-d H:i:s", time() + (30 * 60));
-
-            // Clean previous tokens
-            $stmt = $conn->prepare("DELETE FROM password_resets WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $stmt->close();
-
-            // Insert new token
-            $stmt = $conn->prepare("INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES (?, ?, ?)");
-            $stmt->bind_param("iss", $user_id, $token_hash, $expires_at);
-            $stmt->execute();
-            $stmt->close();
-
-            $message = "If an account exists with that email, a reset request has been recorded. This local build does not deliver reset links; configure trusted email delivery before using password recovery in production.";
-            $message_type = "success";
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Please enter a valid email address.";
+            $message_type = "error";
         } else {
-            $message = "If an account exists with that email, a reset request has been recorded. This local build does not deliver reset links; configure trusted email delivery before using password recovery in production.";
-            $message_type = "success";
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            if ($user) {
+                $user_id    = (int)$user["id"];
+                $token      = bin2hex(random_bytes(32));
+                $token_hash = hash("sha256", $token);
+                $expires_at = date("Y-m-d H:i:s", time() + (30 * 60));
+
+                // Clean previous tokens
+                $stmt = $conn->prepare("DELETE FROM password_resets WHERE user_id = ?");
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $stmt->close();
+
+                // Insert new token
+                $stmt = $conn->prepare("INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES (?, ?, ?)");
+                $stmt->bind_param("iss", $user_id, $token_hash, $expires_at);
+                $stmt->execute();
+                $stmt->close();
+
+                if ($is_local_dev) {
+                    $reset_link = "reset_password.php?token=" . urlencode($token);
+                    $message = "A reset token has been generated. For local development, use the link below to set your new password.";
+                } else {
+                    $message = "If an account exists with that email, a password recovery request has been processed.";
+                }
+                $message_type = "success";
+            } else {
+                $message = "If an account exists with that email, a password recovery request has been processed.";
+                $message_type = "success";
+            }
         }
     }
 }
@@ -72,10 +85,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         <?php endif; ?>
 
+        <?php if (!empty($reset_link) && $is_local_dev): ?>
+            <div class="reset-link-box" style="margin-bottom: 16px;">
+                <span class="status-badge" style="background: var(--warning-bg); color: var(--warning); margin-bottom: 8px; display: inline-block;">Development Mode</span>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Development reset link:</p>
+                <a href="<?= htmlspecialchars($reset_link, ENT_QUOTES, 'UTF-8') ?>" class="view-link">Reset your password →</a>
+            </div>
+        <?php endif; ?>
+
         <form method="POST" action="forgot_password.php">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="name@example.com" required autocomplete="email">
+                <input type="email" id="email" name="email" maxlength="150" placeholder="name@example.com" required autocomplete="email">
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
