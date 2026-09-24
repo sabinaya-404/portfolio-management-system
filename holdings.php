@@ -357,7 +357,11 @@ require_once "includes/header.php";
                                 <td class="muted-cell"><?= htmlspecialchars($holding["sector"]) ?></td>
                                 <td class="numeric-cell"><?= number_format((int) $holding["quantity"]) ?></td>
                                 <td class="numeric-cell">Rs. <?= number_format((float) $holding["current_price"], 2) ?></td>
-                                <td class="numeric-cell"><strong>Rs. <?= number_format((float) $holding["market_value"], 2) ?></strong></td>
+                                <?php $holding_percent = $total_value > 0 ? ((float) $holding["market_value"] / $total_value) * 100 : 0; ?>
+                                <td class="numeric-cell market-value-cell">
+                                    <strong>Rs. <?= number_format((float) $holding["market_value"], 2) ?></strong>
+                                    <span class="value-bar" aria-hidden="true"><span style="width: <?= min(100, max(0, $holding_percent)) ?>%;"></span></span>
+                                </td>
                                 <td class="numeric-cell">
                                     <form method="post" class="holding-action-form" data-holdings-form>
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"]) ?>">

@@ -37,13 +37,16 @@ require_once "includes/header.php";
     <?php if (!$entries): ?>
         <div class="empty-state"><h3>No published updates</h3><p>Published IPO and news information will appear here when an administrator adds it.</p></div>
     <?php else: ?>
+        <div class="editorial-timeline">
         <?php foreach ($entries as $entry): ?>
-            <article class="content-entry">
-                <div class="content-entry-header"><div><span class="status-badge"><?= htmlspecialchars(strtoupper($entry["type"]), ENT_QUOTES, "UTF-8") ?></span><h3><?= htmlspecialchars($entry["title"], ENT_QUOTES, "UTF-8") ?></h3></div><time datetime="<?= htmlspecialchars($entry["publication_date"], ENT_QUOTES, "UTF-8") ?>"><?= htmlspecialchars(date("M j, Y", strtotime($entry["publication_date"])), ENT_QUOTES, "UTF-8") ?></time></div>
+            <article class="content-entry timeline-entry">
+                <time class="timeline-date" datetime="<?= htmlspecialchars($entry["publication_date"], ENT_QUOTES, "UTF-8") ?>"><strong><?= htmlspecialchars(date("d", strtotime($entry["publication_date"])), ENT_QUOTES, "UTF-8") ?></strong><span><?= htmlspecialchars(date("M Y", strtotime($entry["publication_date"])), ENT_QUOTES, "UTF-8") ?></span></time>
+                <div class="content-entry-header"><div><span class="status-badge <?= $entry["type"] === "ipo" ? "update-type-ipo" : "update-type-news" ?>"><?= htmlspecialchars(strtoupper($entry["type"]), ENT_QUOTES, "UTF-8") ?></span><h3><?= htmlspecialchars($entry["title"], ENT_QUOTES, "UTF-8") ?></h3></div></div>
                 <p class="content-entry-body"><?= nl2br(htmlspecialchars($entry["content"], ENT_QUOTES, "UTF-8")) ?></p>
                 <?php if (!empty($entry["source_url"])): ?><p><a class="view-link" href="<?= htmlspecialchars($entry["source_url"], ENT_QUOTES, "UTF-8") ?>" target="_blank" rel="noopener noreferrer">View source</a></p><?php endif; ?>
             </article>
         <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </section>
 <?php require_once "includes/footer.php"; ?>

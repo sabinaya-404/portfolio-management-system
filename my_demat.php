@@ -64,11 +64,12 @@ require_once "includes/header.php";
     </div>
 <?php else: ?>
     <div class="accounts-grid" id="dematGrid">
-        <?php while ($demat = $result->fetch_assoc()): ?>
-            <div class="demat-card-tile demat-search-item" data-search="<?= strtolower(htmlspecialchars($demat['account_name'] . ' ' . $demat['account_holder'] . ' ' . $demat['broker_name'] . ' ' . $demat['boid'])) ?>">
+        <?php $account_index = 0; while ($demat = $result->fetch_assoc()): $account_index++; ?>
+            <div class="demat-card-tile demat-search-item account-identity" data-search="<?= strtolower(htmlspecialchars($demat['account_name'] . ' ' . $demat['account_holder'] . ' ' . $demat['broker_name'] . ' ' . $demat['boid'])) ?>">
                 <div>
                     <div class="demat-tile-header">
                         <div>
+                            <span class="account-index"><?= str_pad((string) $account_index, 2, "0", STR_PAD_LEFT) ?></span>
                             <h3><?= htmlspecialchars($demat["account_name"]) ?></h3>
                             <span class="muted-cell"><?= htmlspecialchars($demat["broker_name"]) ?></span>
                         </div>
