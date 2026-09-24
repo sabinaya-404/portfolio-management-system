@@ -68,13 +68,13 @@ $list_stmt->close();
 $page_title = "Manage IPO & News";
 $page_category = "ADMIN";
 $page_heading = "Manage IPO & News";
-$active_page = "admin";
+$active_page = "admin-news";
 require_once "../includes/header.php";
 ?>
 <?php if ($message !== ""): ?><div class="alert <?= $message_type === "success" ? "alert-success" : "alert-error" ?>" role="<?= $message_type === "success" ? "status" : "alert" ?>"><?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 <section class="dashboard-card" aria-labelledby="content-form-heading">
     <div class="card-header"><h2 id="content-form-heading"><?= $editing_entry ? "Edit entry" : "Add entry" ?></h2><?php if ($editing_entry): ?><a href="news.php" class="view-link">Cancel</a><?php endif; ?></div>
-    <form method="post" class="auth-card" style="max-width: none; box-shadow: none; padding: 0;">
+    <form method="post" class="admin-form content-form">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>"><input type="hidden" name="action" value="<?= $editing_entry ? "edit" : "add" ?>"><?php if ($editing_entry): ?><input type="hidden" name="entry_id" value="<?= (int) $editing_entry["id"] ?>"><?php endif; ?>
         <div class="form-group"><label for="type">Type</label><select id="type" name="type" required><option value="ipo" <?= ($editing_entry["type"] ?? "") === "ipo" ? "selected" : "" ?>>IPO</option><option value="news" <?= ($editing_entry["type"] ?? "news") === "news" ? "selected" : "" ?>>News</option></select></div>
         <div class="form-group"><label for="title">Title</label><input id="title" name="title" maxlength="200" required value="<?= htmlspecialchars($editing_entry["title"] ?? "", ENT_QUOTES, "UTF-8") ?>"></div>
@@ -86,7 +86,7 @@ require_once "../includes/header.php";
     </form>
 </section>
 <section class="dashboard-card" aria-labelledby="content-list-heading"><div class="card-header"><h2 id="content-list-heading">All entries</h2><span class="muted-cell"><?= number_format(count($entries)) ?> entries</span></div>
-<?php if (!$entries): ?><div class="empty-state"><h3>No entries yet</h3><p>Add an IPO or news update to publish it for authenticated users.</p></div><?php else: ?><div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th>TYPE</th><th>TITLE</th><th>DATE</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>
-<?php foreach ($entries as $entry): ?><tr><td><?= htmlspecialchars(strtoupper($entry["type"]), ENT_QUOTES, "UTF-8") ?></td><th scope="row"><?= htmlspecialchars($entry["title"], ENT_QUOTES, "UTF-8") ?></th><td><?= htmlspecialchars($entry["publication_date"], ENT_QUOTES, "UTF-8") ?></td><td><?= htmlspecialchars(ucfirst($entry["status"]), ENT_QUOTES, "UTF-8") ?></td><td><a class="action-link" href="news.php?edit=<?= (int) $entry["id"] ?>">Edit</a><form method="post" style="display:inline; margin-left:10px;"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="entry_id" value="<?= (int) $entry["id"] ?>"><button type="submit" class="action-link-danger">Delete</button></form></td></tr><?php endforeach; ?>
+<?php if (!$entries): ?><div class="empty-state"><h3>No entries yet</h3><p>Add an IPO or news update to publish it for authenticated users.</p></div><?php else: ?><div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th scope="col">TYPE</th><th scope="col">TITLE</th><th scope="col">DATE</th><th scope="col">STATUS</th><th scope="col">ACTIONS</th></tr></thead><tbody>
+<?php foreach ($entries as $entry): ?><tr><td><span class="status-badge"><?= htmlspecialchars(strtoupper($entry["type"]), ENT_QUOTES, "UTF-8") ?></span></td><th scope="row"><?= htmlspecialchars($entry["title"], ENT_QUOTES, "UTF-8") ?></th><td><?= htmlspecialchars($entry["publication_date"], ENT_QUOTES, "UTF-8") ?></td><td><span class="status <?= $entry["status"] === "published" ? "" : "status-unpublished" ?>"><?= htmlspecialchars(ucfirst($entry["status"]), ENT_QUOTES, "UTF-8") ?></span></td><td><a class="action-link" href="news.php?edit=<?= (int) $entry["id"] ?>">Edit</a><form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="entry_id" value="<?= (int) $entry["id"] ?>"><button type="submit" class="action-link-danger">Delete</button></form></td></tr><?php endforeach; ?>
 </tbody></table></div><?php endif; ?></section>
 <?php require_once "../includes/footer.php"; ?>

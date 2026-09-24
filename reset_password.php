@@ -85,7 +85,7 @@ if (empty($token)) {
 <main id="main-content" class="auth-page">
     <div class="auth-card">
         <div class="auth-logo">
-            <div class="brand-icon" style="margin: 0 auto 12px; width: 42px; height: 42px; font-size: 20px;">P</div>
+            <div class="brand-icon">P</div>
             <h1>Create New Password</h1>
             <p>Set a secure password for your account</p>
         </div>
@@ -110,7 +110,7 @@ if (empty($token)) {
                     <input type="password" id="confirm_password" name="confirm_password" maxlength="72" placeholder="Repeat your new password" required autocomplete="new-password">
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary btn-block">
                     Update Password
                 </button>
             </form>

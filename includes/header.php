@@ -7,11 +7,10 @@ $asset_path = $asset_path ?? 'assets/';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f4f6f9">
+    <meta name="theme-color" content="#f6f7f5">
     <title><?= htmlspecialchars($page_title) ?> | Portfolio Manager</title>
     <link rel="stylesheet" href="<?= htmlspecialchars($asset_path) ?>css/style.css">
 
-    <!-- Instant Theme Loader (Prevents White Flash in Dark Mode) -->
     <script>
         try {
             const savedTheme = localStorage.getItem("portfolio_theme");
@@ -32,7 +31,7 @@ $asset_path = $asset_path ?? 'assets/';
     <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Main Content Wrapper -->
-    <main id="main-content" class="dashboard-main <?= ($active_page ?? '') === 'dashboard' ? 'dashboard-motion' : '' ?>">
+    <main id="main-content" class="dashboard-main">
 
         <!-- Top Header Bar -->
         <header class="dashboard-header">
@@ -41,9 +40,13 @@ $asset_path = $asset_path ?? 'assets/';
                 <h1><?= htmlspecialchars($page_heading ?? $page_title) ?></h1>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="header-actions">
+                <button type="button" class="mobile-nav-toggle" id="mobileNavToggle" aria-controls="primary-navigation" aria-expanded="false">
+                    <span class="visually-hidden">Toggle navigation</span>
+                    <span aria-hidden="true">Menu</span>
+                </button>
                 <!-- Dark / Light Mode Toggle Button -->
-                <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle theme">
                     <svg id="themeIconSun" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>

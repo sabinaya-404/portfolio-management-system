@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <main id="main-content" class="auth-page">
     <div class="auth-card">
         <div class="auth-logo">
-            <div class="brand-icon" style="margin: 0 auto 12px; width: 42px; height: 42px; font-size: 20px;">P</div>
+            <div class="brand-icon">P</div>
             <h1>Reset Password</h1>
             <p>Enter your registered email to receive a reset link</p>
         </div>
@@ -86,9 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
         <?php if (!empty($reset_link) && $is_local_dev): ?>
-            <div class="reset-link-box" style="margin-bottom: 16px;">
-                <span class="status-badge" style="background: var(--warning-bg); color: var(--warning); margin-bottom: 8px; display: inline-block;">Development Mode</span>
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Development reset link:</p>
+            <div class="reset-link-box">
+                <span class="status status-unpublished">Development Mode</span>
+                <p class="form-help">Development reset link:</p>
                 <a href="<?= htmlspecialchars($reset_link, ENT_QUOTES, 'UTF-8') ?>" class="view-link">Reset your password →</a>
             </div>
         <?php endif; ?>

@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <main id="main-content" class="auth-page">
     <div class="auth-card">
         <div class="auth-logo">
-            <div class="brand-icon" style="margin: 0 auto 12px; width: 42px; height: 42px; font-size: 20px;">P</div>
+            <div class="brand-icon">P</div>
             <h1>Portfolio Manager</h1>
             <p>Access your investment & Demat portfolio</p>
         </div>
@@ -80,14 +80,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
             <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <label for="password" style="margin-bottom: 0;">Password</label>
-                    <a href="forgot_password.php" style="font-size: 12px; color: var(--primary); text-decoration: none;">Forgot password?</a>
+                <div class="auth-password-heading">
+                    <label for="password">Password</label>
+                    <a href="forgot_password.php">Forgot password?</a>
                 </div>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary btn-block">
                 Sign In
             </button>
         </form>

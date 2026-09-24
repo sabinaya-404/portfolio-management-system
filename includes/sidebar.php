@@ -9,12 +9,14 @@ $base_path = $base_path ?? '';
             <h2>Portfolio</h2>
             <span>Manager</span>
         </div>
+        <button type="button" class="mobile-nav-close" id="mobileNavClose" aria-label="Close navigation">×</button>
     </div>
 
-    <nav class="sidebar-nav">
-        <p class="nav-title">MENU</p>
+    <nav class="sidebar-nav" id="primary-navigation">
+        <div class="nav-group">
+            <p class="nav-title">Workspace</p>
 
-        <a href="<?= $base_path ?>dashboard.php" class="nav-link <?= ($active_page === 'dashboard') ? 'active' : '' ?>">
+        <a href="<?= $base_path ?>dashboard.php" class="nav-link <?= ($active_page === 'dashboard') ? 'active' : '' ?>"<?= ($active_page === 'dashboard') ? ' aria-current="page"' : '' ?>>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 <polyline points="9 22 9 12 15 12 15 22"/>
@@ -22,7 +24,7 @@ $base_path = $base_path ?? '';
             Dashboard
         </a>
 
-        <a href="<?= $base_path ?>my_demat.php" class="nav-link <?= ($active_page === 'demat') ? 'active' : '' ?>">
+        <a href="<?= $base_path ?>my_demat.php" class="nav-link <?= ($active_page === 'demat') ? 'active' : '' ?>"<?= ($active_page === 'demat') ? ' aria-current="page"' : '' ?>>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="20" height="14" x="2" y="5" rx="2"/>
                 <line x1="2" x2="22" y1="10" y2="10"/>
@@ -30,14 +32,14 @@ $base_path = $base_path ?? '';
             My Demat
         </a>
 
-        <a href="<?= $base_path ?>holdings.php" class="nav-link <?= ($active_page === 'holdings') ? 'active' : '' ?>">
+        <a href="<?= $base_path ?>holdings.php" class="nav-link <?= ($active_page === 'holdings') ? 'active' : '' ?>"<?= ($active_page === 'holdings') ? ' aria-current="page"' : '' ?>>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
             Holdings
         </a>
 
-        <a href="<?= $base_path ?>companies.php" class="nav-link <?= ($active_page === 'companies') ? 'active' : '' ?>">
+        <a href="<?= $base_path ?>companies.php" class="nav-link <?= ($active_page === 'companies') ? 'active' : '' ?>"<?= ($active_page === 'companies') ? ' aria-current="page"' : '' ?>>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
                 <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
@@ -45,20 +47,25 @@ $base_path = $base_path ?? '';
             Companies
         </a>
 
+        </div>
+
         <?php if (($current_user_role ?? '') === 'admin'): ?>
-            <a href="<?= $base_path ?>admin/dashboard.php" class="nav-link <?= ($active_page === 'admin') ? 'active' : '' ?>">
+            <div class="nav-group nav-group-admin">
+            <p class="nav-title">Administration</p>
+            <a href="<?= $base_path ?>admin/dashboard.php" class="nav-link <?= ($active_page === 'admin-dashboard') ? 'active' : '' ?>"<?= ($active_page === 'admin-dashboard') ? ' aria-current="page"' : '' ?>>
                 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 12h18M12 3v18"/>
                 </svg>
                 Admin Panel
             </a>
-            <a href="<?= $base_path ?>admin/companies.php" class="nav-link">Manage Companies</a>
-            <a href="<?= $base_path ?>admin/news.php" class="nav-link">Manage IPO & News</a>
-            <a href="<?= $base_path ?>admin/users.php" class="nav-link">Manage Users</a>
-            <a href="<?= $base_path ?>admin/reports.php" class="nav-link">Reports</a>
+            <a href="<?= $base_path ?>admin/companies.php" class="nav-link <?= ($active_page === 'admin-companies') ? 'active' : '' ?>"<?= ($active_page === 'admin-companies') ? ' aria-current="page"' : '' ?>>Manage Companies</a>
+            <a href="<?= $base_path ?>admin/news.php" class="nav-link <?= ($active_page === 'admin-news') ? 'active' : '' ?>"<?= ($active_page === 'admin-news') ? ' aria-current="page"' : '' ?>>Manage IPO & News</a>
+            <a href="<?= $base_path ?>admin/users.php" class="nav-link <?= ($active_page === 'admin-users') ? 'active' : '' ?>"<?= ($active_page === 'admin-users') ? ' aria-current="page"' : '' ?>>Manage Users</a>
+            <a href="<?= $base_path ?>admin/reports.php" class="nav-link <?= ($active_page === 'admin-reports') ? 'active' : '' ?>"<?= ($active_page === 'admin-reports') ? ' aria-current="page"' : '' ?>>Reports</a>
+            </div>
         <?php endif; ?>
 
-        <a href="<?= $base_path ?>ipo-news.php" class="nav-link <?= ($active_page === 'ipo') ? 'active' : '' ?>">
+        <a href="<?= $base_path ?>ipo-news.php" class="nav-link <?= ($active_page === 'ipo') ? 'active' : '' ?>"<?= ($active_page === 'ipo') ? ' aria-current="page"' : '' ?>>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
                 <path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/>

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!themeBtn) return;
         const themeColorMeta = document.querySelector('meta[name="theme-color"]');
         if (themeColorMeta) {
-            themeColorMeta.setAttribute("content", theme === "dark" ? "#0b1120" : "#f4f6f9");
+            themeColorMeta.setAttribute("content", theme === "dark" ? "#101918" : "#f6f7f5");
         }
         if (theme === "dark") {
             sunIcon.style.display = "inline-block";
@@ -42,6 +42,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Keep the current theme for this page when storage is unavailable.
             }
             updateThemeUI(nextTheme);
+        });
+    }
+
+    const navToggle = document.getElementById("mobileNavToggle");
+    const navClose = document.getElementById("mobileNavClose");
+    const navigation = document.getElementById("primary-navigation");
+    if (navToggle && navigation) {
+        navToggle.addEventListener("click", function () {
+            const isOpen = document.body.classList.toggle("nav-open");
+            navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        navigation.addEventListener("click", function (event) {
+            if (event.target.closest("a")) {
+                document.body.classList.remove("nav-open");
+                navToggle.setAttribute("aria-expanded", "false");
+            }
+        });
+        if (navClose) {
+            navClose.addEventListener("click", function () {
+                document.body.classList.remove("nav-open");
+                navToggle.setAttribute("aria-expanded", "false");
+                navToggle.focus();
+            });
+        }
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && document.body.classList.contains("nav-open")) {
+                document.body.classList.remove("nav-open");
+                navToggle.setAttribute("aria-expanded", "false");
+                navToggle.focus();
+            }
         });
     }
 });

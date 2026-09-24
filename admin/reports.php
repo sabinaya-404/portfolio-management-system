@@ -27,7 +27,7 @@ $company_stmt->close();
 $page_title = "Reports";
 $page_category = "ADMIN";
 $page_heading = "Portfolio Reports";
-$active_page = "admin";
+$active_page = "admin-reports";
 require_once "../includes/header.php";
 ?>
 <section class="summary-grid" aria-label="Current database totals">
@@ -38,6 +38,6 @@ require_once "../includes/header.php";
 </section>
 <section class="dashboard-card" aria-labelledby="report-heading">
     <div class="card-header"><div><p class="holdings-eyebrow">Current database state</p><h2 id="report-heading">Company portfolio summary</h2></div><span class="muted-cell"><?= number_format((int) ($summary["represented_companies"] ?? 0)) ?> companies represented</span></div>
-    <?php if (!$company_rows): ?><div class="empty-state"><h3>No holdings to report</h3><p>Company summaries will appear after users record holdings.</p></div><?php else: ?><div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th>SYMBOL</th><th>COMPANY</th><th class="numeric-cell">QUANTITY</th><th class="numeric-cell">MARKET VALUE</th></tr></thead><tbody><?php foreach ($company_rows as $row): ?><tr><th scope="row"><?= htmlspecialchars($row["symbol"], ENT_QUOTES, "UTF-8") ?></th><td><?= htmlspecialchars($row["company_name"], ENT_QUOTES, "UTF-8") ?></td><td class="numeric-cell"><?= number_format((int) $row["quantity"]) ?></td><td class="numeric-cell">Rs. <?= number_format((float) $row["market_value"], 2) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
+    <?php if (!$company_rows): ?><div class="empty-state"><h3>No holdings to report</h3><p>Company summaries will appear after users record holdings.</p></div><?php else: ?><div class="holdings-table-wrap"><table class="holdings-table"><thead><tr><th scope="col">SYMBOL</th><th scope="col">COMPANY</th><th scope="col" class="numeric-cell">QUANTITY</th><th scope="col" class="numeric-cell">MARKET VALUE</th></tr></thead><tbody><?php foreach ($company_rows as $row): ?><tr><th scope="row"><?= htmlspecialchars($row["symbol"], ENT_QUOTES, "UTF-8") ?></th><td><?= htmlspecialchars($row["company_name"], ENT_QUOTES, "UTF-8") ?></td><td class="numeric-cell"><?= number_format((int) $row["quantity"]) ?></td><td class="numeric-cell">Rs. <?= number_format((float) $row["market_value"], 2) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
 </section>
 <?php require_once "../includes/footer.php"; ?>

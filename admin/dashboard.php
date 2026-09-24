@@ -16,7 +16,7 @@ if ($count_result) {
 $page_title = "Admin Dashboard";
 $page_category = "ADMIN";
 $page_heading = "Admin Dashboard";
-$active_page = "admin";
+$active_page = "admin-dashboard";
 
 require_once "../includes/header.php";
 ?>
@@ -43,13 +43,13 @@ require_once "../includes/header.php";
     <div class="card-header">
         <h2 id="admin-actions-heading">Company management</h2>
     </div>
-    <p class="muted-cell" style="margin-bottom: 16px;">
+    <p class="muted-cell admin-description">
         Add listed companies, update their details, or deactivate them without removing existing portfolio holdings.
     </p>
     <a href="companies.php" class="primary-button">Manage Companies</a>
-    <a href="news.php" class="primary-button" style="margin-left: 8px;">Manage IPO & News</a>
-    <a href="users.php" class="primary-button" style="margin-left: 8px;">Manage Users</a>
-    <a href="reports.php" class="primary-button" style="margin-left: 8px;">View Reports</a>
+    <a href="news.php" class="primary-button">Manage IPO &amp; News</a>
+    <a href="users.php" class="primary-button">Manage Users</a>
+    <a href="reports.php" class="primary-button">View Reports</a>
 </section>
 
 <?php require_once "../includes/footer.php"; ?>

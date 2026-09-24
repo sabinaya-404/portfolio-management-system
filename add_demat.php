@@ -59,14 +59,14 @@ $active_page   = "demat";
 require_once "includes/header.php";
 ?>
 
-<div style="margin-bottom: 20px;">
+<div class="page-back">
     <a href="my_demat.php" class="view-link">← Back to My Demat</a>
 </div>
 
-<div style="max-width: 560px; margin: 0 auto;">
+<div class="form-narrow">
     <div class="auth-card">
-        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Demat Account Details</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+        <h3 class="form-heading">Demat Account Details</h3>
+        <p class="form-intro">
             Provide your depository participant and 16-digit Beneficial Owner Identification number.
         </p>
 
@@ -95,14 +95,14 @@ require_once "includes/header.php";
             <div class="form-group">
                 <label for="boid">16-Digit BOID</label>
                 <input type="text" id="boid" name="boid" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" value="<?= htmlspecialchars($boid) ?>" placeholder="1301234567890123" autocomplete="off" required>
-                <small style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display: block;">
+                <small class="form-help">
                     Consists of 8-digit DP ID + 8-digit Client ID.
                 </small>
             </div>
 
-            <div style="display: flex; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-                <a href="my_demat.php" class="btn-primary" style="background: var(--bg-surface-secondary); color: var(--text-main) !important; border: 1px solid var(--border-dark);">Cancel</a>
-                <button type="submit" class="btn-primary" style="flex: 1; justify-content: center;">Link Account</button>
+            <div class="form-actions">
+                <a href="my_demat.php" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Link Account</button>
             </div>
         </form>
     </div>

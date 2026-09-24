@@ -30,15 +30,13 @@ $active_page   = "dashboard";
 require_once "includes/header.php";
 ?>
 
-<!-- Welcome Banner -->
-<div class="dashboard-card" style="display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #1e40af, #2563eb); color: #ffffff; border: none;">
+<div class="dashboard-intro">
     <div>
-        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Welcome back, <?= htmlspecialchars($current_user_name) ?></h2>
-        <p style="color: #bfdbfe; font-size: 13px;">Manage your Demat portfolios, track market assets, and monitor financial news in one place.</p>
+        <p class="holdings-eyebrow">Portfolio workspace</p>
+        <h2>Current account overview</h2>
+        <p class="intro-copy">Keep your linked accounts and recorded positions organized in one place.</p>
     </div>
-    <div>
-        <a href="add_demat.php" class="btn-primary" style="background: #ffffff; color: #1e40af !important; border: 1px solid #ffffff;">+ Link Demat</a>
-    </div>
+    <a href="add_demat.php" class="btn-primary">Link Demat account</a>
 </div>
 
 <!-- Summary Metrics -->
@@ -56,20 +54,17 @@ require_once "includes/header.php";
     </div>
 
     <div class="summary-card">
-        <span>MARKET STATUS</span>
-        <strong class="market-status" style="color: #15803d; font-size: 18px; display: flex; align-items: center; gap: 6px;">
-            <span class="market-status-dot" aria-hidden="true"></span>
-            Market Active
-        </strong>
-        <small>Standard Trading Hours</small>
+        <span>PORTFOLIO VIEW</span>
+        <strong>Current state</strong>
+        <small>Values reflect recorded holdings and listed prices</small>
     </div>
 </section>
 
 <!-- Main Dashboard Grid -->
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+<div class="dashboard-columns">
 
     <!-- Left: Demat Accounts Summary Table -->
-    <div class="dashboard-card" style="margin-bottom: 0;">
+    <div class="dashboard-card">
         <div class="card-header">
             <h3>Linked Demat Accounts (<?= $demat_count ?>)</h3>
             <a href="my_demat.php" class="view-link">Manage All →</a>
@@ -82,25 +77,25 @@ require_once "includes/header.php";
                 <a href="add_demat.php" class="primary-button">+ Link New Demat</a>
             </div>
         <?php else: ?>
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+            <div class="holdings-table-wrap">
+                <table class="holdings-table">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); height: 36px;">
-                            <th>ACCOUNT</th>
-                            <th>HOLDER</th>
-                            <th>BROKER</th>
-                            <th>BOID</th>
-                            <th style="text-align: right;">ACTION</th>
+                        <tr>
+                            <th scope="col">ACCOUNT</th>
+                            <th scope="col">HOLDER</th>
+                            <th scope="col">BROKER</th>
+                            <th scope="col">BOID</th>
+                            <th scope="col" class="numeric-cell">ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($demat_rows as $acc): ?>
-                            <tr style="border-bottom: 1px solid var(--border); height: 48px;">
-                                <td><strong><?= htmlspecialchars($acc["account_name"]) ?></strong></td>
-                                <td style="color: var(--text-muted);"><?= htmlspecialchars($acc["account_holder"]) ?></td>
+                            <tr>
+                                <th scope="row"><?= htmlspecialchars($acc["account_name"]) ?></th>
+                                <td class="muted-cell"><?= htmlspecialchars($acc["account_holder"]) ?></td>
                                 <td><?= htmlspecialchars($acc["broker_name"]) ?></td>
                                 <td><span class="boid-badge"><?= htmlspecialchars($acc["boid"]) ?></span></td>
-                                <td style="text-align: right;">
+                                <td class="numeric-cell">
                                     <a href="holdings.php?demat_id=<?= (int)$acc["id"] ?>" class="view-link">Portfolio →</a>
                                 </td>
                             </tr>
@@ -112,35 +107,15 @@ require_once "includes/header.php";
     </div>
 
     <!-- Right: Quick Navigation & Services -->
-    <div class="dashboard-card" style="margin-bottom: 0;">
+    <div class="dashboard-card">
         <div class="card-header">
             <h3>Quick Actions</h3>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <a href="add_demat.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
-                <div>
-                    <strong style="display: block; font-size: 13px;">+ Link Demat Account</strong>
-                    <span style="font-size: 11.5px; color: var(--text-muted);">Add broker & BOID details</span>
-                </div>
-                <span style="color: var(--text-muted); font-size: 14px;">→</span>
-            </a>
-
-            <a href="companies.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
-                <div>
-                    <strong style="display: block; font-size: 13px;">Browse Companies</strong>
-                    <span style="font-size: 11.5px; color: var(--text-muted);">View listed stocks & prices</span>
-                </div>
-                <span style="color: var(--text-muted); font-size: 14px;">→</span>
-            </a>
-
-            <a href="ipo-news.php" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-surface-secondary); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main);">
-                <div>
-                    <strong style="display: block; font-size: 13px;">IPO News & Notices</strong>
-                    <span style="font-size: 11.5px; color: var(--text-muted);">Check upcoming issues</span>
-                </div>
-                <span style="color: var(--text-muted); font-size: 14px;">→</span>
-            </a>
+        <div class="quick-actions">
+            <a href="add_demat.php"><strong>Link Demat account</strong><span>Add broker and BOID details</span><b aria-hidden="true">→</b></a>
+            <a href="companies.php"><strong>Browse companies</strong><span>Review listed companies and prices</span><b aria-hidden="true">→</b></a>
+            <a href="ipo-news.php"><strong>Read IPO &amp; news</strong><span>View published market updates</span><b aria-hidden="true">→</b></a>
         </div>
     </div>
 

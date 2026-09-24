@@ -127,7 +127,7 @@ $list_stmt->close();
 $page_title = "Manage Companies";
 $page_category = "ADMIN";
 $page_heading = "Manage Companies";
-$active_page = "admin";
+$active_page = "admin-companies";
 
 require_once "../includes/header.php";
 ?>
@@ -145,7 +145,7 @@ require_once "../includes/header.php";
             <a href="companies.php" class="view-link">Cancel</a>
         <?php endif; ?>
     </div>
-    <form method="post" class="holdings-add-form" style="grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;">
+    <form method="post" class="admin-form">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>">
         <input type="hidden" name="action" value="<?= $editing_company ? "edit" : "add" ?>">
         <?php if ($editing_company): ?>
@@ -169,7 +169,7 @@ require_once "../includes/header.php";
         <h2 id="company-list-heading">Existing companies</h2>
         <span class="muted-cell"><?= number_format(count($companies)) ?> result<?= count($companies) === 1 ? "" : "s" ?></span>
     </div>
-    <form method="get" class="holdings-add-form" style="grid-template-columns: minmax(180px, 1fr) 150px auto;">
+    <form method="get" class="filter-bar">
         <label for="company-search">Search</label>
         <label for="company-status">Status</label>
         <span aria-hidden="true"></span>
@@ -209,13 +209,13 @@ require_once "../includes/header.php";
                             <td class="muted-cell"><?= htmlspecialchars($company["sector"], ENT_QUOTES, "UTF-8") ?></td>
                             <td class="numeric-cell">Rs. <?= number_format((float) $company["current_price"], 2) ?></td>
                             <td>
-                                <span class="status-badge"<?= $company["status"] === "inactive" ? ' style="background: var(--danger-bg); color: var(--danger);"' : "" ?>>
+                                <span class="status-badge <?= $company["status"] === "inactive" ? "status-danger" : "" ?>">
                                     <?= htmlspecialchars(ucfirst($company["status"]), ENT_QUOTES, "UTF-8") ?>
                                 </span>
                             </td>
                             <td>
                                 <a href="companies.php?edit=<?= (int) $company["id"] ?>" class="action-link">Edit</a>
-                                <form method="post" style="display: inline; margin-left: 10px;">
+                                <form method="post" class="inline-form">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>">
                                     <input type="hidden" name="action" value="toggle">
                                     <input type="hidden" name="company_id" value="<?= (int) $company["id"] ?>">

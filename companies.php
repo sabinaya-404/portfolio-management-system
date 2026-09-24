@@ -65,7 +65,7 @@ require_once "includes/header.php";
         <span class="muted-cell"><?= number_format(count($companies)) ?> result<?= count($companies) === 1 ? "" : "s" ?></span>
     </div>
 
-    <form method="get" class="holdings-add-form" style="grid-template-columns: minmax(180px, 1fr) 150px auto; margin-bottom: 20px;">
+    <form method="get" class="filter-bar">
         <label for="company-search">Search companies</label>
         <label for="company-status">Status</label>
         <span aria-hidden="true"></span>
@@ -111,8 +111,7 @@ require_once "includes/header.php";
                             <td class="numeric-cell">Rs. <?= number_format((float) $company["current_price"], 2) ?></td>
                             <td>
                                 <span
-                                    class="status-badge"
-                                    <?= $company["status"] === "inactive" ? 'style="background: var(--danger-bg); color: var(--danger);"' : "" ?>
+                                    class="status-badge <?= $company["status"] === "inactive" ? "status-danger" : "" ?>"
                                 >
                                     <?= htmlspecialchars(ucfirst($company["status"]), ENT_QUOTES, "UTF-8") ?>
                                 </span>

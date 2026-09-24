@@ -37,8 +37,8 @@ require_once "includes/header.php";
 <?php endif; ?>
 
 <!-- Top Toolbar: Search & Add Button -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap;">
-    <div style="flex: 1; max-width: 360px; position: relative;">
+<div class="page-toolbar">
+    <div class="search-field">
         <input 
             type="text" 
             id="dematSearchInput"
@@ -46,9 +46,8 @@ require_once "includes/header.php";
             aria-label="Search Demat accounts"
             autocomplete="off"
             placeholder="Search by name, broker, or BOID…"
-            style="width: 100%; padding: 9px 12px 9px 36px; background: #ffffff; border: 1px solid var(--border-dark); border-radius: 6px; font-size: 13px;"
         >
-        <svg aria-hidden="true" style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8" stroke-width="2"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/>
         </svg>
@@ -71,7 +70,7 @@ require_once "includes/header.php";
                     <div class="demat-tile-header">
                         <div>
                             <h3><?= htmlspecialchars($demat["account_name"]) ?></h3>
-                            <span style="font-size: 12px; color: var(--text-muted);"><?= htmlspecialchars($demat["broker_name"]) ?></span>
+                            <span class="muted-cell"><?= htmlspecialchars($demat["broker_name"]) ?></span>
                         </div>
                         <span class="status-badge">Active</span>
                     </div>
@@ -90,10 +89,10 @@ require_once "includes/header.php";
                 <div class="demat-tile-footer">
                     <a href="holdings.php?demat_id=<?= (int)$demat["id"] ?>" class="view-link">View Portfolio →</a>
                     
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="row-actions">
                         <a href="edit_demat.php?id=<?= (int)$demat["id"] ?>" class="action-link">Edit</a>
                         
-                        <form method="POST" action="delete_demat.php" style="display:inline;" onsubmit="return confirm('Delete this Demat account? All associated holdings records will be removed.');">
+                        <form method="POST" action="delete_demat.php" class="inline-form" onsubmit="return confirm('Delete this Demat account? All associated holdings records will be removed.');">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
                             <input type="hidden" name="id" value="<?= (int)$demat["id"] ?>">
                             <button type="submit" class="action-link-danger" aria-label="Delete <?= htmlspecialchars($demat["account_name"]) ?> Demat account">Delete</button>

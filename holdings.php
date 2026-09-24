@@ -395,8 +395,11 @@ require_once "includes/header.php";
                     return;
                 }
                 event.preventDefault();
+                form.setAttribute("aria-busy", "true");
                 if (submitter) {
                     submitter.disabled = true;
+                    submitter.dataset.originalText = submitter.textContent;
+                    submitter.textContent = "Saving…";
                 }
                 if (liveRegion) {
                     liveRegion.textContent = "Saving holding…";
@@ -425,7 +428,9 @@ require_once "includes/header.php";
                     }
                     if (submitter) {
                         submitter.disabled = false;
+                        submitter.textContent = submitter.dataset.originalText || "Save";
                     }
+                    form.removeAttribute("aria-busy");
                 }
             });
         });
