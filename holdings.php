@@ -70,6 +70,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         holdings_redirect((int) $posted_demat_id, $message, false);
     }
 
+    $purchase_price = filter_var($_POST["purchase_price"] ?? null, FILTER_VALIDATE_FLOAT, ["options" => ["min_range" => 0.01]]);
+    if (in_array($action, ["add", "edit"], true) && ($purchase_price === false || $purchase_price === null)) {
+        $message = "Purchase price must be a number greater than zero.";
+        if ($is_ajax) {
+            holdings_response(false, $message, [], 422);
+        }
+        holdings_redirect((int) $posted_demat_id, $message, false);
+    }
+
     if ($action === "add") {
         $company_id = filter_var($_POST["company_id"] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
         if ($company_id === false || $company_id === null) {
@@ -96,8 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             holdings_redirect((int) $posted_demat_id, $message, false);
         }
 
-        $mutation = $conn->prepare("INSERT INTO holdings (demat_id, company_id, quantity) VALUES (?, ?, ?)");
-        $mutation->bind_param("iii", $posted_demat_id, $company_id, $quantity);
+        $mutation = $conn->prepare("INSERT INTO holdings (demat_id, company_id, quantity, purchase_price) VALUES (?, ?, ?, ?)");
+        $mutation->bind_param("iiid", $posted_demat_id, $company_id, $quantity, $purchase_price);
         if (!$mutation->execute()) {
             $mutation->close();
             $message = "Unable to add holding. It may already exist for this account.";
@@ -117,8 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             holdings_redirect((int) $posted_demat_id, $message, false);
         }
-        $mutation = $conn->prepare("UPDATE holdings SET quantity = ? WHERE id = ? AND demat_id = ?");
-        $mutation->bind_param("iii", $quantity, $holding_id, $posted_demat_id);
+        $mutation = $conn->prepare("UPDATE holdings SET quantity = ?, purchase_price = ? WHERE id = ? AND demat_id = ?");
+        $mutation->bind_param("iidi", $quantity, $purchase_price, $holding_id, $posted_demat_id);
         if (!$mutation->execute()) {
             $mutation->close();
             $message = "Unable to update holding.";
@@ -195,7 +204,8 @@ if ($demat_id > 0) {
     if ($demat) {
         $holdings_stmt = $conn->prepare(
             "SELECT h.id, c.symbol, c.company_name, c.sector, c.current_price,
-                    h.quantity, (h.quantity * c.current_price) AS market_value
+                    h.quantity, h.purchase_price,
+                    (h.quantity * c.current_price) AS market_value
              FROM holdings AS h
              INNER JOIN companies AS c ON c.id = h.company_id
              WHERE h.demat_id = ?
@@ -206,8 +216,20 @@ if ($demat_id > 0) {
         $holdings = $holdings_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $holdings_stmt->close();
 
+        $total_profit_loss = 0.0;
         foreach ($holdings as $holding) {
             $total_value += (float) $holding["market_value"];
+            // Calculate profit/loss for this holding (only if purchase_price exists)
+            if (!empty($holding['purchase_price'])) {
+                $purchase_price = (float) $holding['purchase_price'];
+                $current_price = (float) $holding["current_price"];
+                $quantity = (int) $holding["quantity"];
+                $profit_loss = ($current_price - $purchase_price) * $quantity;
+                $holding['profit_loss'] = $profit_loss;
+                $total_profit_loss += $profit_loss;
+            } else {
+                $holding['profit_loss'] = 0; // No P/L for holdings without purchase price
+            }
         }
 
         $companies_stmt = $conn->prepare(
@@ -296,6 +318,11 @@ require_once "includes/header.php";
             <small>Based on current listed prices</small>
         </div>
         <div class="summary-card">
+            <span>TOTAL PROFIT/LOSS</span>
+            <strong><?= $total_profit_loss >= 0 ? '+' : '' ?>Rs. <?= number_format($total_profit_loss, 2) ?></strong>
+            <small>Based on purchase vs current prices</small>
+        </div>
+        <div class="summary-card">
             <span>ACCOUNT STATUS</span>
             <strong class="holdings-status">Active</strong>
             <small>Account access verified</small>
@@ -326,6 +353,8 @@ require_once "includes/header.php";
             </select>
             <label for="add_quantity">Quantity</label>
             <input id="add_quantity" name="quantity" type="number" min="1" step="1" inputmode="numeric" required>
+            <label for="add_purchase_price">Purchase Price (Rs.)</label>
+            <input id="add_purchase_price" name="purchase_price" type="number" min="0.01" step="0.01" inputmode="decimal" required>
             <button type="submit" class="primary-button">Add holding</button>
         </form>
 
@@ -345,7 +374,9 @@ require_once "includes/header.php";
                             <th scope="col">SECTOR</th>
                             <th scope="col" class="numeric-cell">QUANTITY</th>
                             <th scope="col" class="numeric-cell">PRICE</th>
+                            <th scope="col" class="numeric-cell">PURCHASE PRICE</th>
                             <th scope="col" class="numeric-cell">MARKET VALUE</th>
+                            <th scope="col" class="numeric-cell">PROFIT/LOSS</th>
                             <th scope="col" class="numeric-cell">ACTIONS</th>
                         </tr>
                     </thead>
@@ -357,10 +388,14 @@ require_once "includes/header.php";
                                 <td class="muted-cell"><?= htmlspecialchars($holding["sector"]) ?></td>
                                 <td class="numeric-cell"><?= number_format((int) $holding["quantity"]) ?></td>
                                 <td class="numeric-cell">Rs. <?= number_format((float) $holding["current_price"], 2) ?></td>
+                                <td class="numeric-cell">Rs. <?= number_format(!empty($holding['purchase_price']) ? (float) $holding['purchase_price'] : 0.0, 2) ?></td>
                                 <?php $holding_percent = $total_value > 0 ? ((float) $holding["market_value"] / $total_value) * 100 : 0; ?>
                                 <td class="numeric-cell market-value-cell">
                                     <strong>Rs. <?= number_format((float) $holding["market_value"], 2) ?></strong>
                                     <span class="value-bar" aria-hidden="true"><span style="width: <?= min(100, max(0, $holding_percent)) ?>%;"></span></span>
+                                </td>
+                                <td class="numeric-cell">
+                                    <?= number_format($holding['profit_loss'], 2) >= 0 ? '+' : '' ?>Rs. <?= number_format($holding['profit_loss'], 2) ?>
                                 </td>
                                 <td class="numeric-cell">
                                     <form method="post" class="holding-action-form" data-holdings-form>
@@ -369,6 +404,9 @@ require_once "includes/header.php";
                                         <input type="hidden" name="holding_id" value="<?= (int) $holding["id"] ?>">
                                         <label class="visually-hidden" for="quantity-<?= (int) $holding["id"] ?>">Quantity for <?= htmlspecialchars($holding["symbol"]) ?></label>
                                         <input id="quantity-<?= (int) $holding["id"] ?>" name="quantity" type="number" min="1" step="1" inputmode="numeric" value="<?= (int) $holding["quantity"] ?>" required>
+                                        <label for="edit_purchase_price-<?= (int) $holding["id"] ?>">Purchase Price (Rs.)</label>
+                                        <input id="edit_purchase_price-<?= (int) $holding["id"] ?>" name="purchase_price" type="number" min="0.01" step="0.01" inputmode="decimal"
+                                               value="<?= isset($holding['purchase_price']) ? htmlspecialchars($holding['purchase_price']) : '' ?>" required>
                                         <button type="submit" name="action" value="edit" class="action-link">Save</button>
                                         <button type="submit" name="action" value="delete" class="action-link-danger" data-delete-holding>Delete</button>
                                     </form>
