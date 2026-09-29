@@ -2,6 +2,17 @@
 date_default_timezone_set("Asia/Kathmandu");
 require_once "includes/session.php";
 require_once "config/database.php";
+require_once "includes/logger.php";
+
+// Load email configuration
+$mail_config = @require __DIR__ . '/config/mail.php';
+
+// PHPMailer setup
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer autoloader
+require 'vendor/autoload.php';
 
 $message = "";
 $message_type = "";
@@ -10,7 +21,7 @@ $is_local_dev = in_array($_SERVER["HTTP_HOST"] ?? "", ["localhost", "127.0.0.1"]
     || in_array($_SERVER["SERVER_NAME"] ?? "", ["localhost", "127.0.0.1"], true);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired or the request was invalid. Please try again.";
         $message_type = "error";
     } else {
@@ -44,13 +55,106 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt->execute();
                 $stmt->close();
 
+                // Generate reset link
+                $reset_link = "reset_password.php?token=" . urlencode($token);
+
+                // Send email via Brevo (PHPMailer) or show link in dev
                 if ($is_local_dev) {
-                    $reset_link = "reset_password.php?token=" . urlencode($token);
+                    // Development mode: Show link on page for testing
                     $message = "A reset token has been generated. For local development, use the link below to set your new password.";
+                    $message_type = "success";
                 } else {
-                    $message = "If an account exists with that email, a password recovery request has been processed.";
+                    // Production mode: Send actual email via Brevo
+                    try {
+                        $mail = new PHPMailer(true);
+
+                        // Server settings - Using configured Brevo credentials
+                        $mail->isSMTP();
+                        $mail->Host       = $mail_config['host'] ?? 'smtp-relay.brevo.com';
+                        $mail->SMTPAuth   = true;
+                        $mail->Username   = $mail_config['username'] ?? '';
+                        $mail->Password   = $mail_config['password'] ?? '';
+
+                        // Handle secure connection setting
+                        $secure = $mail_config['secure'] ?? 'STARTTLS';
+                        if ($secure === 'STARTTLS') {
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        } elseif ($secure === 'SMTPS') {
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                        } else {
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Default
+                        }
+
+                        $mail->Port       = $mail_config['port'] ?? 587;
+
+                        // Recipients
+                        $mail->setFrom($mail_config['from_email'] ?? '', $mail_config['from_name'] ?? 'Portfolio Management System');
+                        $mail->addAddress($email);
+
+                        // Content
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Password Reset Request - Portfolio Management System';
+
+                        // Professional email body
+                        $mail->Body = '
+                        <html>
+                        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                                <h2 style="color: #2563eb;">Password Reset Request</h2>
+                                <p>Hello,</p>
+                                <p>We received a request to reset your password for your Portfolio Management System account.</p>
+                                <p>Click the button below to reset your password. This link will expire in 30 minutes for security:</p>
+                                <div style="text-align: center; margin: 30px 0;">
+                                    <a href="' . htmlspecialchars($reset_link, ENT_QUOTES, 'UTF-8') . '"
+                                       style="background-color: #2563eb; color: white; padding: 12px 28px;
+                                              text-decoration: none; border-radius: 6px; font-weight: bold;
+                                              display: inline-block;">
+                                        Reset Your Password
+                                    </a>
+                                </div>
+                                <p>If you did not request this password reset, please simply ignore this email.</p>
+                                <p>This is an automated message - please do not reply to this email.</p>
+                                <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+                                <p style="font-size: 0.9em; color: #666;">
+                                    Portfolio Management System<br>
+                                    <em>Securely managing your investments</em>
+                                </p>
+                            </div>
+                        </body>
+                        </html>
+                        ';
+
+                        // Plain text fallback for email clients that don't support HTML
+                        $mail->AltBody = "
+                        Password Reset Request - Portfolio Management System
+
+                        Hello,
+
+                        We received a request to reset your password for your Portfolio Management System account.
+
+                        Please visit the following link to reset your password (this link will expire in 30 minutes):
+                        " . $reset_link . "
+
+                        If you did not request this password reset, please ignore this email.
+
+                        This is an automated message - please do not reply to this email.
+
+                        Portfolio Management System
+                        ";
+
+                        $mail->send();
+
+                        $message = "If an account exists with that email, a password recovery request has been processed.";
+                        $message_type = "success";
+                    } catch (Exception $e) {
+                        // Log the error (don't expose details to user for security)
+                        error_log("Email sending failed: " . $mail->ErrorInfo);
+
+                        // STILL show generic message - critical for security!
+                        $message = "If an account exists with that email, a password recovery request has been processed.";
+                        $message_type = "success";
+                    }
                 }
-                $message_type = "success";
             } else {
                 $message = "If an account exists with that email, a password recovery request has been processed.";
                 $message_type = "success";

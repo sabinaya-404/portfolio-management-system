@@ -7,12 +7,29 @@ if (isset($_SESSION["user_id"])) {
 }
 
 require_once "config/database.php";
+require_once "includes/rate_limit.php";
+require_once "includes/logger.php";
 
 $message = "";
 $message_type = "error";
 
+// Rate limiting configuration
+$ip_address = get_client_ip();
+$endpoint = "register";
+$max_attempts = 3; // 3 attempts
+$window_seconds = 900; // 15 minutes
+
+// Check if IP is rate limited
+if (is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds)) {
+    http_response_code(429); // Too Many Requests
+    $message = "Too many registration attempts. Please try again later.";
+    $message_type = "error";
+    // Don't process the form further
+    $_POST = [];
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired or the request was invalid. Please try again.";
     } else {
         $name             = trim($_POST["name"] ?? "");
@@ -49,6 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($stmt->execute()) {
                     $message = "Registration successful! You can now log in.";
                     $message_type = "success";
+                    // Clear rate limit on successful registration
+                    clear_rate_limit($ip_address, $endpoint);
                 } else {
                     $message = "Registration failed. Please try again.";
                 }

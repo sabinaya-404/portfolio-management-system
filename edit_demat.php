@@ -1,6 +1,7 @@
 <?php
 require_once "includes/auth.php";
 require_once "config/database.php";
+require_once "includes/logger.php";
 
 $demat_id = (int)($_GET["id"] ?? 0);
 if ($demat_id <= 0) {
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $broker_name    = trim((string) ($_POST["broker_name"] ?? ""));
     $boid           = trim((string) ($_POST["boid"] ?? ""));
 
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired. Refresh the page and try again.";
     } elseif (
         $account_name === "" || $account_holder === "" || $broker_name === "" || $boid === ""

@@ -1,6 +1,7 @@
 <?php
 require_once "includes/auth.php";
 require_once "config/database.php";
+require_once "includes/logger.php";
 
 $message = "";
 $account_name = "";
@@ -14,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $broker_name    = trim((string) ($_POST["broker_name"] ?? ""));
     $boid           = trim((string) ($_POST["boid"] ?? ""));
 
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired. Refresh the page and try again.";
     } elseif (
         $account_name === "" || $account_holder === "" || $broker_name === "" || $boid === ""
@@ -25,12 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (!preg_match('/^[0-9]{16}$/', $boid)) {
         $message = "BOID must be exactly 16 numeric digits.";
     } else {
-        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ? LIMIT 1");
-        $check->bind_param("s", $boid);
+        $check = $conn->prepare("SELECT id FROM demat_accounts WHERE boid = ? AND user_id = ? LIMIT 1");
+        $check->bind_param("si", $boid, $current_user_id);
         $check->execute();
-        
+
         if ($check->get_result()->num_rows > 0) {
-            $message = "A Demat account with this BOID already exists.";
+            $message = "A Demat account with this BOID already exists for your account.";
         } else {
             $stmt = $conn->prepare(
                 "INSERT INTO demat_accounts (user_id, account_name, account_holder, broker_name, boid)

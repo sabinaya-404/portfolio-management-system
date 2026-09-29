@@ -207,7 +207,7 @@ if ($demat_id > 0) {
                     h.quantity, h.purchase_price,
                     (h.quantity * c.current_price) AS market_value
              FROM holdings AS h
-             INNER JOIN companies AS c ON c.id = h.company_id
+             INNER JOIN companies AS c ON c.id = h.company_id AND c.status = 'active'
              WHERE h.demat_id = ?
              ORDER BY c.symbol ASC"
         );

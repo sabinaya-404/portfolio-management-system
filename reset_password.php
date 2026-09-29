@@ -2,6 +2,7 @@
 date_default_timezone_set("Asia/Kathmandu");
 require_once "includes/session.php";
 require_once "config/database.php";
+require_once "includes/logger.php";
 
 $message = "";
 $message_type = "";
@@ -25,7 +26,7 @@ if (empty($token)) {
         $message = "This password reset link is invalid or has expired.";
         $message_type = "error";
     } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
-        if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+        if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
             $message = "Your session expired or the request was invalid. Please try again.";
             $message_type = "error";
         } else {

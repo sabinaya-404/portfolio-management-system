@@ -1,6 +1,8 @@
 # Local environment/config
 config/database.php
+config/mail.php
 database/portfolio_management.sql
+.env
 
 # Copilot / Spec Kit
 .github/

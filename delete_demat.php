@@ -1,11 +1,12 @@
 <?php
 require_once "includes/auth.php";
 require_once "config/database.php";
+require_once "includes/logger.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $demat_id = filter_var($_POST["id"] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
 
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $_SESSION["flash_error"] = "Your session expired. Refresh the page and try again.";
     } elseif ($demat_id !== false && $demat_id !== null) {
         $stmt = $conn->prepare("DELETE FROM demat_accounts WHERE id = ? AND user_id = ?");

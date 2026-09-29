@@ -31,3 +31,4 @@ if (!function_exists("verify_csrf_token")) {
             && hash_equals((string) $_SESSION["csrf_token"], (string) $token);
     }
 }
+?>

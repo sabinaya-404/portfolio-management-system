@@ -1,5 +1,7 @@
 <?php
 require_once "includes/session.php";
+require_once "includes/rate_limit.php";
+require_once "includes/logger.php";
 
 // If already logged in, redirect to dashboard
 if (isset($_SESSION["user_id"])) {
@@ -9,13 +11,28 @@ if (isset($_SESSION["user_id"])) {
 
 require_once "config/database.php";
 
+// Rate limiting configuration
+$ip_address = get_client_ip();
+$endpoint = "login";
+$max_attempts = 5; // Maximum attempts
+$window_seconds = 300; // 5 minutes
+
+// Check if IP is rate limited
+if (is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds)) {
+    http_response_code(429); // Too Many Requests
+    $message = "Too many login attempts. Please try again later.";
+    $message_type = "error";
+    // Don't process the form further
+    $_POST = [];
+}
+
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email    = trim((string) ($_POST["email"] ?? ""));
     $password = (string) ($_POST["password"] ?? "");
 
-    if (!verify_csrf_token($_POST["csrf_token"] ?? null)) {
+    if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired or the request was invalid. Please try again.";
     } elseif (empty($email) || empty($password)) {
         $message = "Please enter both email and password.";
@@ -29,6 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $user = $result->fetch_assoc();
 
             if (password_verify($password, $user["password"])) {
+                // Clear rate limit on successful login
+                clear_rate_limit($ip_address, $endpoint);
+
                 session_regenerate_id(true);
                 $_SESSION["user_id"]   = (int)$user["id"];
                 $_SESSION["user_name"] = $user["name"];
@@ -38,9 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit;
             } else {
                 $message = "Invalid email or password.";
+                // Record failed attempt for rate limiting
+                record_failed_attempt($ip_address, $endpoint, $window_seconds);
             }
         } else {
             $message = "Invalid email or password.";
+            // Record failed attempt for rate limiting (even if user doesn't exist)
+            record_failed_attempt($ip_address, $endpoint, $window_seconds);
         }
         $stmt->close();
     }

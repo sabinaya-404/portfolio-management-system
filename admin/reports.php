@@ -8,9 +8,9 @@ $summary_result = $conn->query(
         (SELECT COUNT(*) FROM holdings) AS holdings_total,
         (SELECT COUNT(DISTINCT company_id) FROM holdings) AS represented_companies,
         (SELECT COALESCE(SUM(h.quantity * c.current_price), 0)
-         FROM holdings AS h INNER JOIN companies AS c ON c.id = h.company_id) AS portfolio_value,
+         FROM holdings AS h INNER JOIN companies AS c ON c.id = h.company_id AND c.status = 'active') AS portfolio_value,
         (SELECT COALESCE(SUM(CASE WHEN h.purchase_price IS NOT NULL THEN h.quantity * (c.current_price - h.purchase_price) ELSE 0 END), 0)
-         FROM holdings AS h INNER JOIN companies AS c ON c.id = h.company_id) AS total_profit_loss"
+         FROM holdings AS h INNER JOIN companies AS c ON c.id = h.company_id AND c.status = 'active') AS total_profit_loss"
 );
 $summary = $summary_result ? $summary_result->fetch_assoc() : [];
 
@@ -19,7 +19,7 @@ $company_stmt = $conn->prepare(
             SUM(h.quantity * c.current_price) AS market_value,
             SUM(CASE WHEN h.purchase_price IS NOT NULL THEN h.quantity * (c.current_price - h.purchase_price) ELSE 0 END) AS profit_loss
      FROM holdings AS h
-     INNER JOIN companies AS c ON c.id = h.company_id
+     INNER JOIN companies AS c ON c.id = h.company_id AND c.status = 'active'
      GROUP BY c.id, c.symbol, c.company_name
      ORDER BY market_value DESC, c.symbol ASC"
 );
