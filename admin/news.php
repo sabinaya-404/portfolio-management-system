@@ -65,22 +65,21 @@ $list_stmt->execute();
 $entries = $list_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $list_stmt->close();
 
-$page_title = "Manage IPO & News";
+$page_title = "Manage IPO News / Share News";
 $page_category = "ADMIN";
-$page_heading = "Manage IPO & News";
+$page_heading = "Manage IPO News / Share News";
 $active_page = "admin-news";
 require_once "../includes/header.php";
 ?>
 <?php if ($message !== ""): ?><div class="alert <?= $message_type === "success" ? "alert-success" : "alert-error" ?>" role="<?= $message_type === "success" ? "status" : "alert" ?>"><?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
 <section class="dashboard-card" aria-labelledby="content-form-heading">
-    <div class="card-header"><h2 id="content-form-heading"><?= $editing_entry ? "Edit entry" : "Add entry" ?></h2><?php if ($editing_entry): ?><a href="news.php" class="view-link">Cancel</a><?php endif; ?></div>
+    <div class="card-header"><h2 id="content-form-heading"><?= $editing_entry ? "Edit entry" : "Add entry" ?></h2><?php if ($editing_entry): ?><a href="news.php" class="view-link">Cancel</a><?php endif; ?><a href="rss-importer.php" class="primary-button">Import RSS Feed</a></div>
     <form method="post" class="admin-form content-form">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"], ENT_QUOTES, "UTF-8") ?>"><input type="hidden" name="action" value="<?= $editing_entry ? "edit" : "add" ?>"><?php if ($editing_entry): ?><input type="hidden" name="entry_id" value="<?= (int) $editing_entry["id"] ?>"><?php endif; ?>
         <div class="form-group"><label for="type">Type</label><select id="type" name="type" required><option value="ipo" <?= ($editing_entry["type"] ?? "") === "ipo" ? "selected" : "" ?>>IPO</option><option value="news" <?= ($editing_entry["type"] ?? "news") === "news" ? "selected" : "" ?>>News</option></select></div>
         <div class="form-group"><label for="title">Title</label><input id="title" name="title" maxlength="200" required value="<?= htmlspecialchars($editing_entry["title"] ?? "", ENT_QUOTES, "UTF-8") ?>"></div>
         <div class="form-group"><label for="content">Description / content</label><textarea id="content" name="content" rows="6" required><?= htmlspecialchars($editing_entry["content"] ?? "", ENT_QUOTES, "UTF-8") ?></textarea></div>
         <div class="form-group"><label for="publication_date">Publication date</label><input id="publication_date" name="publication_date" type="date" required value="<?= htmlspecialchars($editing_entry["publication_date"] ?? date("Y-m-d"), ENT_QUOTES, "UTF-8") ?>"></div>
-        <div class="form-group"><label for="source_url">Source URL <span class="muted-cell">(optional)</span></label><input id="source_url" name="source_url" type="url" maxlength="500" value="<?= htmlspecialchars($editing_entry["source_url"] ?? "", ENT_QUOTES, "UTF-8") ?>"></div>
         <div class="form-group"><label for="status">Status</label><select id="status" name="status"><option value="unpublished" <?= ($editing_entry["status"] ?? "") === "unpublished" ? "selected" : "" ?>>Unpublished</option><option value="published" <?= ($editing_entry["status"] ?? "") === "published" ? "selected" : "" ?>>Published</option></select></div>
         <button type="submit" class="primary-button"><?= $editing_entry ? "Save changes" : "Save entry" ?></button>
     </form>

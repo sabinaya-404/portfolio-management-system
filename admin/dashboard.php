@@ -20,7 +20,6 @@ $active_page = "admin-dashboard";
 
 require_once "../includes/header.php";
 ?>
-
 <section class="summary-grid" aria-label="Company summary">
     <div class="summary-card">
         <span>TOTAL COMPANIES</span>
@@ -47,7 +46,8 @@ require_once "../includes/header.php";
         Add listed companies, update their details, or deactivate them without removing existing portfolio holdings.
     </p>
     <a href="companies.php" class="primary-button">Manage Companies</a>
-    <a href="news.php" class="primary-button">Manage IPO &amp; News</a>
+    <a href="news.php" class="primary-button">Manage IPO News / Share News</a>
+    <a href="rss-importer.php" class="primary-button">Import RSS Feed</a>
     <a href="users.php" class="primary-button">Manage Users</a>
     <a href="reports.php" class="primary-button">View Reports</a>
 </section>
