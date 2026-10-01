@@ -217,8 +217,14 @@ if ($demat_id > 0) {
         $holdings_stmt->close();
 
         $total_profit_loss = 0.0;
+        $total_invested = 0.0;
         foreach ($holdings as &$holding) {
             $total_value += (float) $holding["market_value"];
+            // Calculate invested amount for this holding
+            $invested_amount = (float) $holding["quantity"] * (float) ($holding['purchase_price'] ?? 0);
+            $holding['invested_amount'] = $invested_amount;
+            $total_invested += $invested_amount;
+
             // Calculate profit/loss for this holding (only if purchase_price exists)
             if (!empty($holding['purchase_price'])) {
                 $purchase_price = (float) $holding['purchase_price'];
@@ -314,6 +320,11 @@ require_once "includes/header.php";
             <small>Recorded positions in this account</small>
         </div>
         <div class="summary-card">
+            <span>TOTAL INVESTED AMOUNT</span>
+            <strong>Rs. <?= number_format($total_invested, 2) ?></strong>
+            <small>Quantity × purchase price</small>
+        </div>
+        <div class="summary-card">
             <span>ESTIMATED MARKET VALUE</span>
             <strong>Rs. <?= number_format($total_value, 2) ?></strong>
             <small>Based on current listed prices</small>
@@ -385,6 +396,7 @@ require_once "includes/header.php";
                             <th scope="col" class="numeric-cell">QUANTITY</th>
                             <th scope="col" class="numeric-cell">PRICE</th>
                             <th scope="col" class="numeric-cell">PURCHASE PRICE</th>
+                            <th scope="col" class="numeric-cell">INVESTED AMOUNT</th>
                             <th scope="col" class="numeric-cell">MARKET VALUE</th>
                             <th scope="col" class="numeric-cell">PROFIT/LOSS</th>
                             <th scope="col" class="numeric-cell">ACTIONS</th>
@@ -399,6 +411,7 @@ require_once "includes/header.php";
                                 <td class="numeric-cell"><?= number_format((int) $holding["quantity"]) ?></td>
                                 <td class="numeric-cell">Rs. <?= number_format((float) $holding["current_price"], 2) ?></td>
                                 <td class="numeric-cell">Rs. <?= number_format(!empty($holding['purchase_price']) ? (float) $holding['purchase_price'] : 0.0, 2) ?></td>
+                                <td class="numeric-cell">Rs. <?= number_format((float) $holding["invested_amount"], 2) ?></td>
                                 <?php $holding_percent = $total_value > 0 ? ((float) $holding["market_value"] / $total_value) * 100 : 0; ?>
                                 <td class="numeric-cell market-value-cell">
                                     <strong>Rs. <?= number_format((float) $holding["market_value"], 2) ?></strong>
