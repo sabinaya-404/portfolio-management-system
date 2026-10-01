@@ -37,6 +37,19 @@ foreach ($allocation_rows as $allocation_row) {
     $portfolio_value += (float) $allocation_row["market_value"];
 }
 
+// 2.5. Fetch total invested amount across all user's holdings
+$invested_stmt = $conn->prepare(
+    "SELECT COALESCE(SUM(h.quantity * h.purchase_price), 0) AS total_invested
+     FROM holdings AS h
+     INNER JOIN demat_accounts AS d ON d.id = h.demat_id
+     WHERE d.user_id = ?"
+);
+$invested_stmt->bind_param("i", $current_user_id);
+$invested_stmt->execute();
+$invested_result = $invested_stmt->get_result()->fetch_assoc();
+$total_invested = (float)($invested_result["total_invested"] ?? 0);
+$invested_stmt->close();
+
 $holdings_count_stmt = $conn->prepare(
     "SELECT COUNT(*) AS total_holdings
      FROM holdings AS h
@@ -96,6 +109,11 @@ require_once "includes/header.php";
         <span>Portfolio value</span>
         <strong>Rs. <?= number_format($portfolio_value, 2) ?></strong>
         <small>Across <?= number_format($holding_count) ?> recorded positions</small>
+    </div>
+    <div class="summary-card">
+        <span>TOTAL INVESTED AMOUNT</span>
+        <strong>Rs. <?= number_format($total_invested, 2) ?></strong>
+        <small>Sum of quantity × purchase price</small>
     </div>
     <div class="summary-card">
         <span>Holdings</span>
