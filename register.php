@@ -37,43 +37,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $password         = $_POST["password"] ?? "";
         $confirm_password = $_POST["confirm_password"] ?? "";
 
+        // Check if all required fields are provided (basic format validation)
         if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
             $message = "Please fill in all required fields.";
-        } elseif (mb_strlen($name) > 100) {
-            $message = "Full name cannot exceed 100 characters.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = "Please enter a valid email address.";
-        } elseif (strlen($email) > 150) {
-            $message = "Email address cannot exceed 150 characters.";
-        } elseif (strlen($password) < 6) {
-            $message = "Password must be at least 6 characters long.";
-        } elseif (strlen($password) > 72) {
-            $message = "Password cannot exceed 72 characters.";
-        } elseif ($password !== $confirm_password) {
-            $message = "Passwords do not match.";
         } else {
-            $check = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-            $check->bind_param("s", $email);
-            $check->execute();
-            
-            if ($check->get_result()->num_rows > 0) {
-                $message = "An account with this email already exists.";
-            } else {
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $name, $email, $hashedPassword);
+            // Record attempt for rate limiting (after basic validation but before format validation)
+            record_failed_attempt($ip_address, $endpoint, $window_seconds);
 
-                if ($stmt->execute()) {
-                    $message = "Registration successful! You can now log in.";
-                    $message_type = "success";
-                    // Clear rate limit on successful registration
-                    clear_rate_limit($ip_address, $endpoint);
+            if (mb_strlen($name) > 100) {
+                $message = "Full name cannot exceed 100 characters.";
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $message = "Please enter a valid email address.";
+            } elseif (strlen($email) > 150) {
+                $message = "Email address cannot exceed 150 characters.";
+            } elseif (strlen($password) < 6) {
+                $message = "Password must be at least 6 characters long.";
+            } elseif (strlen($password) > 72) {
+                $message = "Password cannot exceed 72 characters.";
+            } elseif ($password !== $confirm_password) {
+                $message = "Passwords do not match.";
+            } else {
+                $check = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+                $check->bind_param("s", $email);
+                $check->execute();
+
+                if ($check->get_result()->num_rows > 0) {
+                    $message = "An account with this email already exists.";
                 } else {
-                    $message = "Registration failed. Please try again.";
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+                    $stmt->bind_param("sss", $name, $email, $hashedPassword);
+
+                    if ($stmt->execute()) {
+                        $message = "Registration successful! You can now log in.";
+                        $message_type = "success";
+                        // Clear rate limit on successful registration
+                        clear_rate_limit($ip_address, $endpoint);
+                    } else {
+                        $message = "Registration failed. Please try again.";
+                    }
+                    $stmt->close();
                 }
-                $stmt->close();
+                $check->close();
             }
-            $check->close();
         }
     }
 }

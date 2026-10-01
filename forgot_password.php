@@ -3,6 +3,7 @@ date_default_timezone_set("Asia/Kathmandu");
 require_once "includes/session.php";
 require_once "config/database.php";
 require_once "includes/logger.php";
+require_once "includes/rate_limit.php";
 
 // Load email configuration
 $mail_config = @require __DIR__ . '/config/mail.php';
@@ -14,17 +15,68 @@ use PHPMailer\PHPMailer\Exception;
 // Load Composer autoloader
 require 'vendor/autoload.php';
 
+// Rate limiting configuration for forgot-password endpoint
+$ip_address = get_client_ip();
+$endpoint = "forgot_password";
+$max_attempts = 5; // Maximum attempts
+$window_seconds = 300; // 5 minutes
+
+// Check if IP is rate limited
+if (is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds)) {
+    http_response_code(429); // Too Many Requests
+    $message = "Too many password reset requests. Please try again later.";
+    $message_type = "error";
+    // Don't process the form further
+    $_POST = [];
+}
+
+// Load environment variables from .env file
+function loadEnvFile() {
+    $envFile = __DIR__ . '/.env';
+    if (file_exists($envFile)) {
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            // Skip comments and empty lines
+            if (trim($line) === '' || str_starts_with(trim($line), '#')) {
+                continue;
+            }
+            // Parse KEY=VALUE format
+            if (str_contains($line, '=')) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                // Remove quotes if present
+                if ($value !== null && preg_match('/^["\'](.*)["\']$/', $value, $matches)) {
+                    $value = $matches[1];
+                }
+                // Only set if not already in $_ENV or $_SERVER
+                if (!isset($_SERVER[$key]) && !isset($_ENV[$key])) {
+                    $_ENV[$key] = $value;
+                    $_SERVER[$key] = $value; // Also make available in $_SERVER for consistency
+                }
+            }
+        }
+    }
+}
+
+// Load environment variables
+loadEnvFile();
+
+// Determine if we're in development mode using explicit configuration
+$is_local_dev = isset($_SERVER['APP_ENV']) && $_SERVER['APP_ENV'] === 'development';
+
 $message = "";
 $message_type = "";
 $reset_link = "";
-$is_local_dev = in_array($_SERVER["HTTP_HOST"] ?? "", ["localhost", "127.0.0.1"], true)
-    || in_array($_SERVER["SERVER_NAME"] ?? "", ["localhost", "127.0.0.1"], true);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!validate_csrf_token($_POST["csrf_token"] ?? null)) {
         $message = "Your session expired or the request was invalid. Please try again.";
         $message_type = "error";
     } else {
+        // Record attempt for rate limiting (do this before email validation to prevent user enumeration)
+        record_failed_attempt($ip_address, $endpoint, $window_seconds);
+
         $email = trim($_POST["email"] ?? "");
 
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {

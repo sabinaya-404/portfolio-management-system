@@ -132,36 +132,13 @@ function clear_rate_limit($ip_address, $endpoint) {
 }
 
 /**
- * Get the client IP address (with proxy support)
+ * Get the client IP address
  *
  * @return string The client IP address
  */
 function get_client_ip() {
-    // Check for forwarded IPs (from proxies/load balancers)
-    $headers = [
-        'HTTP_CLIENT_IP',
-        'HTTP_X_FORWARDED_FOR',
-        'HTTP_X_FORWARDED',
-        'HTTP_X_CLUSTER_CLIENT_IP',
-        'HTTP_FORWARDED_FOR',
-        'HTTP_FORWARDED',
-        'REMOTE_ADDR'
-    ];
-
-    foreach ($headers as $header) {
-        if (!empty($_SERVER[$header])) {
-            // Handle comma-separated IPs in X-Forwarded-For
-            $ips = explode(',', $_SERVER[$header]);
-            $ip = trim($ips[0]); // Get the first IP
-
-            // Validate IP address
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
-                return $ip;
-            }
-        }
-    }
-
-    // Fallback to remote address
+    // Only use REMOTE_ADDR as it cannot be spoofed by the client
+    // Headers like HTTP_X_FORWARDED_FOR can be set by clients to bypass rate limiting
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 ?>
