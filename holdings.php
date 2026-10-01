@@ -203,7 +203,7 @@ if ($demat_id > 0) {
 
     if ($demat) {
         $holdings_stmt = $conn->prepare(
-            "SELECT h.id, c.symbol, c.company_name, c.sector, c.current_price,
+            "SELECT h.id, h.company_id, c.symbol, c.company_name, c.sector, c.current_price,
                     h.quantity, h.purchase_price,
                     (h.quantity * c.current_price) AS market_value
              FROM holdings AS h
@@ -217,7 +217,7 @@ if ($demat_id > 0) {
         $holdings_stmt->close();
 
         $total_profit_loss = 0.0;
-        foreach ($holdings as $holding) {
+        foreach ($holdings as &$holding) {
             $total_value += (float) $holding["market_value"];
             // Calculate profit/loss for this holding (only if purchase_price exists)
             if (!empty($holding['purchase_price'])) {
@@ -231,6 +231,7 @@ if ($demat_id > 0) {
                 $holding['profit_loss'] = 0; // No P/L for holdings without purchase price
             }
         }
+        unset($holding); // Break the reference with the last element
 
         $companies_stmt = $conn->prepare(
             "SELECT id, symbol, company_name
@@ -343,14 +344,23 @@ require_once "includes/header.php";
             <input type="hidden" name="demat_id" value="<?= $demat_id ?>">
             <input type="hidden" name="action" value="add">
             <label for="company_id">Add security</label>
-            <select id="company_id" name="company_id" required>
-                <option value="">Select company</option>
-                <?php foreach ($companies as $company): ?>
-                    <option value="<?= (int) $company["id"] ?>">
-                        <?= htmlspecialchars($company["symbol"] . " — " . $company["company_name"]) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <div class="searchable-select" data-placeholder="Select company">
+                <input type="hidden" name="company_id" id="company_id" required>
+                <div class="searchable-select-control" aria-haspopup="listbox" aria-expanded="false">
+                    <div class="searchable-select-placeholder">Select company</div>
+                    <div class="searchable-select-input">
+                        <input type="text" role="combobox" aria-autocomplete="list" aria-controls="company_id_listbox" aria-activedescendant="" aria-expanded="false">
+                    </div>
+                    <div class="searchable-select-indicator">&vdash;</div>
+                </div>
+                <div class="searchable-select-menu" id="company_id_listbox" role="listbox" aria-hidden="true">
+                    <?php foreach ($companies as $company): ?>
+                        <div class="searchable-select-option" data-value="<?= (int) $company["id"] ?>" role="option">
+                            <?= htmlspecialchars($company["symbol"] . " — " . $company["company_name"]) ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             <label for="add_quantity">Quantity</label>
             <input id="add_quantity" name="quantity" type="number" min="1" step="1" inputmode="numeric" required>
             <label for="add_purchase_price">Purchase Price (Rs.)</label>
@@ -407,6 +417,28 @@ require_once "includes/header.php";
                                         <label for="edit_purchase_price-<?= (int) $holding["id"] ?>">Purchase Price (Rs.)</label>
                                         <input id="edit_purchase_price-<?= (int) $holding["id"] ?>" name="purchase_price" type="number" min="0.01" step="0.01" inputmode="decimal"
                                                value="<?= isset($holding['purchase_price']) ? htmlspecialchars($holding['purchase_price']) : '' ?>" required>
+                                    </div>
+                                </td>
+                                <td class="numeric-cell">
+                                    <!-- Searchable company select for edit -->
+                                    <div class="searchable-select" data-placeholder="Select company" data-company-id="<?= (int) $holding["company_id"] ?>" data-company-symbol="<?= htmlspecialchars($holding["symbol"] . " — " . $holding["company_name"]) ?>">
+                                        <input type="hidden" name="company_id" value="<?= (int) $holding["company_id"] ?>">
+                                        <div class="searchable-select-control" aria-haspopup="listbox" aria-expanded="false">
+                                            <div class="searchable-select-placeholder">Select company</div>
+                                            <div class="searchable-select-input">
+                                                <input type="text" role="combobox" aria-autocomplete="list" aria-controls="edit_company_id_listbox_<?= (int) $holding["id"] ?>" aria-activedescendant="" aria-expanded="false">
+                                            </div>
+                                            <div class="searchable-select-indicator">&vdash;</div>
+                                        </div>
+                                        <div class="searchable-select-menu" id="edit_company_id_listbox_<?= (int) $holding["id"] ?>" role="listbox" aria-hidden="true">
+                                            <?php foreach ($companies as $company): ?>
+                                                <div class="searchable-select-option" data-value="<?= (int) $company["id"] ?>" role="option">
+                                                    <?= htmlspecialchars($company["symbol"] . " — " . $company["company_name"]) ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </td>
                                         <button type="submit" name="action" value="edit" class="action-link">Save</button>
                                         <button type="submit" name="action" value="delete" class="action-link-danger" data-delete-holding>Delete</button>
                                     </form>
