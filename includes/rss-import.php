@@ -81,23 +81,23 @@ function validateRssItem(string $title, string $description, string $link, strin
  * @return bool True if financially relevant, false otherwise
  */
 function isFinanciallyRelevant(string $title, string $description): bool {
-    // Convert to lowercase for case-insensitive matching
+    // Convert to lowercase for case-insensitive matching; strip HTML tags from description
     $titleLower = mb_strtolower($title);
-    $descLower = mb_strtolower($description);
+    $descLower = mb_strtolower(strip_tags($description));
 
     // Key financial terms in English and Nepali (Devanagari)
     $financialTerms = [
         // English terms
         'share', 'shares', 'stock', 'stocks', 'market', 'nepse', 'ipo',
-        'securities', 'trading', 'bull', 'bear', 'index', 'dividend',
+        'securities', 'trading', 'bull', 'index', 'dividend',
         'portfolio', 'investment', 'finance', 'financial',
         'earnings', 'results', 'profit', 'loss', 'turnover',
-        'volume', 'bid', 'ask', 'broker', 'demat',
+        'volume', 'bid', 'broker', 'demat',
 
         // Nepali terms (Devanagari)
-        'शेयर', 'स्टक', 'मार्केट', 'नेप्से', 'आईपीओ', 'सिक्युरिटी',
+        'शेयर', 'सेयर', 'स्टक', 'मार्केट', 'नेप्से', 'आईपीओ', 'सिक्युरिटी',
         'ट्रेडिङ', 'इन्डेक्स', 'डिभिडेन्ड', 'पोर्टफोलियो', 'निवेश',
-        'वित्तीय', 'कम्पनी', 'कॉर्पोरेट', 'अर्निंग', 'परिणाम', 'नाफा',
+        'वित्तीय', 'कॉर्पोरेट', 'अर्निंग', 'परिणाम', 'नाफा',
         'नोक्सान', 'टर्नओवर', 'वोल्युम', 'बिड', 'आस्क', 'ब्रोकर',
         'डेमाट'
     ];
