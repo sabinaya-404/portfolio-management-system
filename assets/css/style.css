@@ -1358,15 +1358,17 @@ a {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 24px 28px;
+  min-width: 0;
+  padding: 22px 24px;
 }
 
 .portfolio-value-block strong {
   display: block;
-  font-size: clamp(34px, 5vw, 62px);
+  font-size: clamp(32px, 4.5vw, 54px);
   letter-spacing: -0.08em;
   line-height: 0.96;
   margin: 10px 0 12px;
+  overflow-wrap: anywhere;
 }
 
 .portfolio-value-block span {
@@ -1384,6 +1386,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
   padding: 20px;
   text-align: center;
 }
@@ -1421,11 +1424,18 @@ a {
   display: grid;
   gap: 10px;
   grid-template-columns: minmax(130px, 1fr) minmax(140px, 2fr) 56px;
+  min-width: 0;
+}
+
+.allocation-label,
+.allocation-track {
+  min-width: 0;
 }
 
 .allocation-label strong {
   display: block;
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .allocation-label span {
@@ -1462,7 +1472,8 @@ a {
   color: var(--color-text);
   display: grid;
   gap: 8px;
-  grid-template-columns: 36px 1fr;
+  grid-template-columns: 36px minmax(0, 1fr);
+  min-width: 0;
   padding: 12px 0;
   text-decoration: none;
 }
@@ -1474,17 +1485,21 @@ a {
 .account-register-main strong {
   display: block;
   font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .account-register-main small {
   color: var(--color-text-muted);
   display: block;
   font-size: 11px;
+  overflow-wrap: anywhere;
 }
 
 .account-register-boid {
   color: var(--color-text-muted);
   grid-column: 2;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-lower-grid {
@@ -1501,6 +1516,7 @@ a {
   display: grid;
   gap: 12px;
   grid-template-columns: 58px 1fr auto;
+  min-width: 0;
   padding: 12px 0;
   text-decoration: none;
 }
@@ -1531,6 +1547,12 @@ a {
   color: var(--color-text-muted);
   font-family: var(--font-mono);
   font-size: 10px;
+  white-space: nowrap;
+}
+
+.update-row strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .action-panel {
@@ -1555,6 +1577,10 @@ a {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 24px;
+}
+
+.action-stack > * {
+  min-width: 0;
 }
 
 .form-help {
