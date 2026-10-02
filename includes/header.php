@@ -7,7 +7,7 @@ $asset_path = $asset_path ?? 'assets/';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f6f7f5">
+    <meta name="theme-color" content="#f4f6f7">
     <title><?= htmlspecialchars($page_title) ?> | Portfolio Manager</title>
     <link rel="stylesheet" href="<?= htmlspecialchars($asset_path) ?>css/style.css">
 
