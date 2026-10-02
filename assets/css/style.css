@@ -570,6 +570,7 @@ a {
   align-items: center;
   display: flex;
   gap: 12px;
+  min-width: 0;
 }
 .theme-toggle-btn,
 .mobile-nav-toggle {
@@ -596,6 +597,7 @@ a {
   border-left: 1px solid var(--border);
   display: flex;
   gap: 9px;
+  min-width: 0;
   padding-left: 12px;
 }
 .user-avatar {
@@ -615,6 +617,7 @@ a {
   display: block;
   font-size: 13px;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 .user-info span {
   color: var(--text-muted);
@@ -1194,7 +1197,8 @@ a {
   .dashboard-header > div:first-child,
   .dashboard-main,
   .dashboard-card,
-  .summary-card {
+  .summary-card,
+  .header-actions {
     min-width: 0;
   }
   .summary-grid {
