@@ -56,7 +56,7 @@ $active_page = "companies";
 require_once "includes/header.php";
 ?>
 
-<section class="dashboard-card" aria-labelledby="companies-heading">
+<section class="dashboard-card open-panel directory-panel" aria-labelledby="companies-heading">
     <div class="card-header">
         <div>
             <p class="holdings-eyebrow">Market directory</p>

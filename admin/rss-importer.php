@@ -73,7 +73,7 @@ $active_page = "admin-rss-importer";
 require_once "../includes/header.php";
 ?>
 <?php if ($message !== ""): ?><div class="alert <?= $message_type === 'success' ? 'alert-success' : 'alert-error' ?>" role="<?= $message_type === 'success' ? 'status' : 'alert' ?>"><?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?></div><?php endif; ?>
-<section class="dashboard-card" aria-labelledby="rss-import-heading">
+<section class="dashboard-card open-panel admin-section" aria-labelledby="rss-import-heading">
     <div class="card-header">
         <h2 id="rss-import-heading">Import RSS Feeds</h2>
         <p class="form-help">Import news items from configured RSS feeds. Duplicate items (same article from any feed) will be automatically skipped to avoid duplicate content in public news feed.</p>
@@ -101,7 +101,7 @@ require_once "../includes/header.php";
     </form>
 
     <?php if ($importResults !== null): ?>
-        <div class="dashboard-card" aria-labelledby="import-results-heading">
+        <div class="dashboard-card open-panel import-results-panel" aria-labelledby="import-results-heading">
             <div class="card-header">
                 <h2 id="import-results-heading">Import Results</h2>
             </div>
@@ -125,7 +125,7 @@ require_once "../includes/header.php";
     <?php endif; ?>
 </section>
 
-<section class="dashboard-card" aria-labelledby="rss-info-heading">
+<section class="dashboard-card open-panel admin-section" aria-labelledby="rss-info-heading">
     <div class="card-header">
         <h2 id="rss-info-heading">About RSS Importing</h2>
     </div>

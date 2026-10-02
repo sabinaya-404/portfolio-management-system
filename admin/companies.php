@@ -138,7 +138,7 @@ require_once "../includes/header.php";
     </div>
 <?php endif; ?>
 
-<section class="dashboard-card" aria-labelledby="company-form-heading">
+<section class="dashboard-card open-panel admin-section" aria-labelledby="company-form-heading">
     <div class="card-header">
         <h2 id="company-form-heading"><?= $editing_company ? "Edit company" : "Add company" ?></h2>
         <?php if ($editing_company): ?>
@@ -164,7 +164,7 @@ require_once "../includes/header.php";
     </form>
 </section>
 
-<section class="dashboard-card" aria-labelledby="company-list-heading">
+<section class="dashboard-card open-panel admin-section" aria-labelledby="company-list-heading">
     <div class="card-header">
         <h2 id="company-list-heading">Existing companies</h2>
         <span class="muted-cell"><?= number_format(count($companies)) ?> result<?= count($companies) === 1 ? "" : "s" ?></span>

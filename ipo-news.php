@@ -29,7 +29,7 @@ $page_heading = "IPO & News";
 $active_page = "ipo";
 require_once "includes/header.php";
 ?>
-<section class="dashboard-card" aria-labelledby="ipo-news-heading">
+<section class="dashboard-card open-panel editorial-panel" aria-labelledby="ipo-news-heading">
     <div class="card-header">
         <div><p class="holdings-eyebrow">Published updates</p><h2 id="ipo-news-heading">IPO & News</h2></div>
         <form method="get"><label class="visually-hidden" for="content-type">Filter by type</label><select id="content-type" name="type" onchange="this.form.submit()"><option value="">All updates</option><option value="ipo" <?= $type === "ipo" ? "selected" : "" ?>>IPO</option><option value="news" <?= $type === "news" ? "selected" : "" ?>>News</option></select></form>

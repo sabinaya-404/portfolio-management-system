@@ -292,7 +292,7 @@ require_once "includes/header.php";
         <a href="my_demat.php" class="primary-button">View My Demat Accounts</a>
     </section>
 <?php else: ?>
-    <section class="holdings-account-card dashboard-card" aria-labelledby="account-details-heading">
+    <section class="holdings-account-card dashboard-card open-panel" aria-labelledby="account-details-heading">
         <div>
             <p class="holdings-eyebrow">Account identity</p>
             <h2 id="account-details-heading"><?= htmlspecialchars($demat["account_name"]) ?></h2>
@@ -341,7 +341,7 @@ require_once "includes/header.php";
         </div>
     </section>
 
-    <section class="dashboard-card holdings-table-card" aria-labelledby="holdings-table-heading">
+    <section class="dashboard-card open-panel holdings-table-card" aria-labelledby="holdings-table-heading">
         <div class="card-header">
             <div>
                 <p class="holdings-eyebrow">Position register</p>

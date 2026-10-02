@@ -38,18 +38,20 @@ require_once "../includes/header.php";
     </div>
 </section>
 
-<section class="dashboard-card" aria-labelledby="admin-actions-heading">
+<section class="dashboard-card open-panel admin-workspace" aria-labelledby="admin-actions-heading">
     <div class="card-header">
         <h2 id="admin-actions-heading">Company management</h2>
     </div>
     <p class="muted-cell admin-description">
         Add listed companies, update their details, or deactivate them without removing existing portfolio holdings.
     </p>
-    <a href="companies.php" class="primary-button">Manage Companies</a>
-    <a href="news.php" class="primary-button">Manage IPO News / Share News</a>
-    <a href="rss-importer.php" class="primary-button">Import RSS Feed</a>
-    <a href="users.php" class="primary-button">Manage Users</a>
-    <a href="reports.php" class="primary-button">View Reports</a>
+    <div class="admin-action-grid">
+        <a href="companies.php" class="primary-button">Manage Companies <span aria-hidden="true">→</span></a>
+        <a href="news.php" class="primary-button">Manage IPO News / Share News <span aria-hidden="true">→</span></a>
+        <a href="rss-importer.php" class="primary-button">Import RSS Feed <span aria-hidden="true">→</span></a>
+        <a href="users.php" class="primary-button">Manage Users <span aria-hidden="true">→</span></a>
+        <a href="reports.php" class="primary-button">View Reports <span aria-hidden="true">→</span></a>
+    </div>
 </section>
 
 <?php require_once "../includes/footer.php"; ?>

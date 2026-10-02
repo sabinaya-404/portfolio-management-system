@@ -63,7 +63,7 @@ require_once "includes/header.php";
         <a href="add_demat.php" class="primary-button">+ Link First Account</a>
     </div>
 <?php else: ?>
-    <div class="accounts-grid" id="dematGrid">
+    <div class="accounts-grid account-register-grid" id="dematGrid">
         <?php $account_index = 0; while ($demat = $result->fetch_assoc()): $account_index++; ?>
             <div class="demat-card-tile demat-search-item account-identity" data-search="<?= strtolower(htmlspecialchars($demat['account_name'] . ' ' . $demat['account_holder'] . ' ' . $demat['broker_name'] . ' ' . $demat['boid'])) ?>">
                 <div>

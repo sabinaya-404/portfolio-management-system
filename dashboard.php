@@ -91,7 +91,7 @@ $active_page   = "dashboard";
 require_once "includes/header.php";
 ?>
 
-<section class="portfolio-masthead">
+<section class="portfolio-masthead portfolio-masthead-open">
     <div class="portfolio-value-block">
         <p class="section-kicker">Current portfolio value</p>
         <strong>Rs. <?= number_format($portfolio_value, 2) ?></strong>
@@ -104,7 +104,7 @@ require_once "includes/header.php";
     </div>
 </section>
 
-<section class="summary-grid" aria-label="Portfolio summary">
+<section class="summary-grid metric-strip" aria-label="Portfolio summary">
     <div class="summary-card">
         <span>Portfolio value</span>
         <strong>Rs. <?= number_format($portfolio_value, 2) ?></strong>
@@ -130,7 +130,7 @@ require_once "includes/header.php";
 <div class="dashboard-columns dashboard-columns-featured">
 
     <!-- Left: Demat Accounts Summary Table -->
-    <div class="dashboard-card allocation-panel">
+    <div class="dashboard-card open-panel allocation-panel">
         <div class="card-header">
             <div>
                 <p class="section-kicker">Allocation</p>
@@ -163,7 +163,7 @@ require_once "includes/header.php";
         <?php endif; ?>
     </div>
 
-    <div class="dashboard-card account-panel">
+    <div class="dashboard-card open-panel account-panel">
         <div class="card-header">
             <div>
                 <p class="section-kicker">Accounts</p>
@@ -192,7 +192,7 @@ require_once "includes/header.php";
 </div>
 
 <div class="dashboard-lower-grid">
-    <section class="dashboard-card update-panel" aria-labelledby="updates-heading">
+    <section class="dashboard-card open-panel update-panel" aria-labelledby="updates-heading">
         <div class="card-header">
             <div><p class="section-kicker">Published information</p><h3 id="updates-heading">Recent updates</h3></div>
             <a href="ipo-news.php" class="view-link">Open feed</a>
@@ -211,7 +211,7 @@ require_once "includes/header.php";
             </div>
         <?php endif; ?>
     </section>
-    <aside class="dashboard-card action-panel">
+    <aside class="dashboard-card open-panel action-panel">
         <p class="section-kicker">Next move</p>
         <h3>Keep the register current.</h3>
         <p>Link an account or add a position whenever your records change.</p>

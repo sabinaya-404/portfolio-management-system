@@ -2279,11 +2279,8 @@ body {
 
 .dashboard-card.open-panel {
   background: color-mix(in srgb, var(--surface) 42%, transparent);
-  border-bottom: 1px solid var(--rule);
-  border-left: 0;
-  border-right: 0;
-  border-top: 1px solid var(--rule);
-  padding: 24px 0;
+  border: 1px solid var(--rule);
+  padding: 24px 22px;
 }
 
 .dashboard-card.open-panel .card-header {
@@ -2637,10 +2634,10 @@ body {
 
 .auth-card {
   align-self: center;
-  border: 0;
+  border: 1px solid var(--border);
   border-top: 2px solid var(--primary);
   max-width: 520px;
-  padding: 28px 0 0;
+  padding: 28px 24px 0;
 }
 
 .auth-logo {
