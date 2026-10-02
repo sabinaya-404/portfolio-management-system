@@ -848,6 +848,10 @@ a {
   grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
   padding: 12px;
 }
+.admin-form > *,
+.admin-form .form-group {
+  min-width: 0;
+}
 .content-form {
   display: block;
 }
@@ -862,6 +866,44 @@ a {
 }
 .admin-form textarea {
   min-height: 130px;
+}
+.feed-checkbox {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.feed-checkbox label {
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.import-results,
+.rss-info {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.import-results strong,
+.rss-info strong {
+  color: var(--text);
+}
+.import-errors {
+  background: var(--danger-bg);
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border));
+  color: var(--danger);
+  margin-top: 16px;
+  padding: 12px;
+}
+.import-errors h3 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.import-errors ul,
+.rss-info ul {
+  padding-left: 20px;
+}
+.rss-info code {
+  overflow-wrap: anywhere;
 }
 
 /* Accounts and data */
