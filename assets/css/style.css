@@ -694,6 +694,9 @@ a {
   justify-content: space-between;
   margin-bottom: 20px;
 }
+.page-toolbar > * {
+  min-width: 0;
+}
 .search-field {
   max-width: 360px;
   position: relative;
@@ -854,12 +857,13 @@ a {
 .accounts-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
 }
 .demat-card-tile {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  min-width: 0;
   padding: 16px 18px;
 }
 .account-identity {
@@ -878,11 +882,16 @@ a {
 .demat-tile-header {
   align-items: flex-start;
   display: flex;
+  gap: 12px;
   justify-content: space-between;
   margin-bottom: 14px;
 }
+.demat-tile-header > div {
+  min-width: 0;
+}
 .demat-tile-header h3 {
   font-size: 16px;
+  overflow-wrap: anywhere;
 }
 .demat-info-row {
   color: var(--text-muted);
@@ -891,6 +900,7 @@ a {
 }
 .demat-info-row strong {
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 .boid-badge {
   background: var(--surface-muted);
@@ -902,6 +912,8 @@ a {
   font-size: 12px;
   letter-spacing: 0.03em;
   margin-top: 4px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: 3px 7px;
 }
 .status-badge,
@@ -931,9 +943,15 @@ a {
   align-items: center;
   border-top: 1px solid var(--border);
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
   justify-content: space-between;
   margin-top: 16px;
   padding-top: 12px;
+}
+.demat-tile-footer > .view-link,
+.demat-tile-footer > .row-actions {
+  min-width: 0;
 }
 .action-link,
 .action-link-danger {
@@ -950,6 +968,9 @@ a {
 }
 .action-link-danger:hover {
   text-decoration: underline;
+}
+.row-actions {
+  flex-wrap: wrap;
 }
 .empty-state {
   border: 1px dashed var(--border-strong);
