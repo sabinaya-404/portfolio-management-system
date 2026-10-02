@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!themeBtn) return;
         const themeColorMeta = document.querySelector('meta[name="theme-color"]');
         if (themeColorMeta) {
-            themeColorMeta.setAttribute("content", theme === "dark" ? "#101918" : "#f6f7f5");
+            themeColorMeta.setAttribute("content", theme === "dark" ? "#11161b" : "#f4f6f7");
         }
         if (theme === "dark") {
             sunIcon.style.display = "inline-block";
