@@ -163,6 +163,7 @@ a {
   display: flex;
   justify-content: center;
   min-height: 100vh;
+  min-width: 0;
   padding: var(--space-5);
 }
 .auth-card {
@@ -171,6 +172,7 @@ a {
   border-radius: var(--radius-lg);
   box-shadow: none;
   max-width: 440px;
+  min-width: 0;
   padding: var(--space-6);
   width: 100%;
 }
@@ -188,6 +190,7 @@ a {
   color: var(--text);
   font-size: 22px;
   letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
 }
 .auth-logo p {
   color: var(--text-muted);
@@ -199,6 +202,7 @@ a {
   color: var(--text-muted);
   font-size: 13px;
   margin-top: var(--space-5);
+  overflow-wrap: anywhere;
   padding-top: var(--space-4);
   text-align: center;
 }
@@ -244,7 +248,11 @@ a {
 .auth-password-heading {
   align-items: center;
   display: flex;
+  gap: 12px;
   justify-content: space-between;
+}
+.auth-password-heading > * {
+  min-width: 0;
   margin-bottom: 6px;
 }
 .auth-password-heading label {
@@ -280,6 +288,9 @@ a {
 .form-group input::placeholder,
 .filter-bar input::placeholder {
   color: var(--text-light);
+}
+.auth-card .alert {
+  overflow-wrap: anywhere;
 }
 .form-group input:focus,
 .form-group select:focus,
