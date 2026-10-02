@@ -249,11 +249,11 @@ a {
   align-items: center;
   display: flex;
   gap: 12px;
+  margin-bottom: 6px;
   justify-content: space-between;
 }
 .auth-password-heading > * {
   min-width: 0;
-  margin-bottom: 6px;
 }
 .auth-password-heading label {
   margin-bottom: 0;
