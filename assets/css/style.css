@@ -1017,6 +1017,9 @@ a {
   justify-content: space-between;
   margin-bottom: 24px;
 }
+.holdings-toolbar > div {
+  min-width: 0;
+}
 .holdings-eyebrow {
   color: var(--text-muted);
   font-size: 11px;
@@ -1028,11 +1031,13 @@ a {
 .holdings-title {
   font-size: 20px;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 .holdings-subtitle {
   color: var(--text-muted);
   font-size: 13px;
   margin-top: 4px;
+  overflow-wrap: anywhere;
 }
 .holdings-account-card {
   align-items: center;
@@ -1040,15 +1045,20 @@ a {
   gap: 28px;
   justify-content: space-between;
 }
+.holdings-account-card > div {
+  min-width: 0;
+}
 .holdings-account-card h2,
 .holdings-table-card h2 {
   font-size: 16px;
+  overflow-wrap: anywhere;
 }
 .holdings-account-details {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(3, minmax(130px, 1fr));
   min-width: min(100%, 540px);
+  width: 100%;
 }
 .holdings-account-details dt {
   color: var(--text-muted);
@@ -1058,10 +1068,17 @@ a {
 .holdings-account-details dd {
   font-size: 13px;
   font-weight: 650;
+  overflow-wrap: anywhere;
 }
 .holdings-summary-grid {
   grid-template-columns: repeat(3, 1fr);
   margin-top: 20px;
+}
+.holdings-summary-grid .summary-card {
+  min-width: 0;
+}
+.holdings-summary-grid .summary-card strong {
+  overflow-wrap: anywhere;
 }
 .holdings-add-form {
   align-items: end;
@@ -1073,6 +1090,9 @@ a {
   grid-template-columns: minmax(180px, 1fr) 120px auto;
   margin-bottom: 20px;
   padding: 12px;
+}
+.holdings-add-form > * {
+  min-width: 0;
 }
 .holdings-add-form label {
   color: var(--text-muted);
@@ -1093,7 +1113,12 @@ a {
 .holding-action-form {
   align-items: center;
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 8px;
+}
+.holdings-table-card .holdings-table td:nth-child(2),
+.holdings-table-card .holdings-table td:nth-child(3) {
+  overflow-wrap: anywhere;
 }
 .market-value-cell {
   min-width: 155px;
@@ -1107,7 +1132,7 @@ a {
   width: 100%;
 }
 .value-bar span {
-  background: #ef765f;
+  background: var(--primary);
   display: block;
   height: 100%;
 }
