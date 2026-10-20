@@ -70,7 +70,6 @@ This is a college project for local development and demonstration. It should not
 │   ├── css/                Stylesheets
 │   └── js/                 Browser-side JavaScript
 ├── config/                 Local application configuration
-├── cron/                   Background job scripts
 ├── database/               Local database files
 ├── demat/                  Demat-related page files
 ├── includes/               Shared authentication, session, logging, and layout helpers

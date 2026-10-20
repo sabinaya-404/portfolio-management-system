@@ -106,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="form-group">
                 <div class="auth-password-heading">
                     <label for="password">Password</label>
-                    <a href="forgot_password.php">Forgot password?</a>
                 </div>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
             </div>

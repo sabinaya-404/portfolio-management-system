@@ -50,10 +50,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $message = "Please enter a valid email address.";
             } elseif (strlen($email) > 150) {
                 $message = "Email address cannot exceed 150 characters.";
-            } elseif (strlen($password) < 6) {
-                $message = "Password must be at least 6 characters long.";
-            } elseif (strlen($password) > 72) {
-                $message = "Password cannot exceed 72 characters.";
+            } elseif (strlen($password) < 8) {
+                $message = "Password must be at least 8 characters long.";
+            } elseif (strlen($password) > 16) {
+                $message = "Password cannot exceed 16 characters.";
+            } elseif (!preg_match('/[A-Z]/', $password)) {
+                $message = "Password must contain at least one uppercase letter.";
+            } elseif (!preg_match('/[a-z]/', $password)) {
+                $message = "Password must contain at least one lowercase letter.";
+            } elseif (!preg_match('/\d/', $password)) {
+                $message = "Password must contain at least one digit.";
+            } elseif (!preg_match('/[^A-Za-z0-9]/', $password)) {
+                $message = "Password must contain at least one special character.";
             } elseif ($password !== $confirm_password) {
                 $message = "Passwords do not match.";
             } else {
@@ -125,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" maxlength="72" placeholder="At least 6 characters" required autocomplete="new-password">
+                <input type="password" id="password" name="password" maxlength="16" placeholder="8-16 characters, include uppercase, lowercase, digit, special" required autocomplete="new-password">
             </div>
 
             <div class="form-group">
