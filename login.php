@@ -34,7 +34,7 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (empty($email) || empty($password)) {
         $message = "Please enter both email and password.";
     } else {
-        $stmt = $conn->prepare("SELECT id, name, password, role FROM users WHERE email = ? LIMIT 1");
+        $stmt = $conn->prepare("SELECT id, name, password, role, account_status FROM users WHERE email = ? LIMIT 1");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -42,7 +42,12 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
-            if (password_verify($password, $user["password"])) {
+            if (!password_verify($password, $user["password"])) {
+                // Record failed attempt for rate limiting.
+                $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
+            } elseif ($user["account_status"] === "disabled") {
+                $message = "Your account has been disabled by the admin.";
+            } else {
                 // Clear rate limit on successful login
                 clear_rate_limit($ip_address, $endpoint);
 
@@ -53,20 +58,19 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
 
                 header("Location: dashboard.php");
                 exit;
-            } else {
-                // Record failed attempt for rate limiting.
-                $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
             }
         } else {
             // Record failed attempt for rate limiting (even if user doesn't exist).
             $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
         }
 
-        if ($failed_attempts >= $max_attempts) {
-            $message = "Login attempts from this IP are temporarily restricted for 20 minutes.";
-        } else {
-            $remaining_attempts = $max_attempts - $failed_attempts;
-            $message = "Invalid email or password. {$remaining_attempts} attempts remaining before temporary lockout.";
+        if (isset($failed_attempts)) {
+            if ($failed_attempts >= $max_attempts) {
+                $message = "Login attempts from this IP are temporarily restricted for 20 minutes.";
+            } else {
+                $remaining_attempts = $max_attempts - $failed_attempts;
+                $message = "Invalid email or password. {$remaining_attempts} attempts remaining before temporary lockout.";
+            }
         }
         $stmt->close();
     }
