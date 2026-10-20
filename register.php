@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $message = "Your session expired or the request was invalid. Please try again.";
     } else {
         $name             = trim($_POST["name"] ?? "");
-        $email            = trim($_POST["email"] ?? "");
+        $email            = strtolower(trim($_POST["email"] ?? ""));
         $password         = $_POST["password"] ?? "";
         $confirm_password = $_POST["confirm_password"] ?? "";
 
