@@ -14,21 +14,18 @@ require_once "config/database.php";
 // Rate limiting configuration
 $ip_address = get_client_ip();
 $endpoint = "login";
-$max_attempts = 5; // Maximum attempts
-$window_seconds = 300; // 5 minutes
-
-// Check if IP is rate limited
-if (is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds)) {
-    http_response_code(429); // Too Many Requests
-    $message = "Too many login attempts. Please try again later.";
-    $message_type = "error";
-    // Don't process the form further
-    $_POST = [];
-}
+$max_attempts = 5; // Five failed attempts before lockout
+$window_seconds = 300; // Counting window
+$lockout_seconds = 1200; // 20-minute lockout
 
 $message = "";
+$rate_limited = is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds, $lockout_seconds);
+if ($rate_limited) {
+    http_response_code(429); // Too Many Requests
+    $message = "Too many login attempts. Please try again later.";
+}
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
     $email    = trim((string) ($_POST["email"] ?? ""));
     $password = (string) ($_POST["password"] ?? "");
 
@@ -57,14 +54,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 header("Location: dashboard.php");
                 exit;
             } else {
-                $message = "Invalid email or password.";
-                // Record failed attempt for rate limiting
-                record_failed_attempt($ip_address, $endpoint, $window_seconds);
+                // Record failed attempt for rate limiting.
+                $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
             }
         } else {
-            $message = "Invalid email or password.";
-            // Record failed attempt for rate limiting (even if user doesn't exist)
-            record_failed_attempt($ip_address, $endpoint, $window_seconds);
+            // Record failed attempt for rate limiting (even if user doesn't exist).
+            $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
+        }
+
+        if ($failed_attempts >= $max_attempts) {
+            $message = "Login attempts from this IP are temporarily restricted for 20 minutes.";
+        } else {
+            $remaining_attempts = $max_attempts - $failed_attempts;
+            $message = "Invalid email or password. {$remaining_attempts} attempts remaining before temporary lockout.";
         }
         $stmt->close();
     }
