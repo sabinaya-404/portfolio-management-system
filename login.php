@@ -48,16 +48,41 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
             } elseif ($user["account_status"] === "disabled") {
                 $message = "Your account has been disabled by the admin.";
             } else {
-                // Clear rate limit on successful login
-                clear_rate_limit($ip_address, $endpoint);
+                $last_login_update_succeeded = false;
+                $last_login_stmt = null;
 
-                session_regenerate_id(true);
-                $_SESSION["user_id"]   = (int)$user["id"];
-                $_SESSION["user_name"] = $user["name"];
-                $_SESSION["role"]      = $user["role"];
+                try {
+                    $last_login_stmt = $conn->prepare(
+                        "UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ? AND account_status = 'active'"
+                    );
+                    if ($last_login_stmt) {
+                        $last_login_stmt->bind_param("i", $user["id"]);
+                        $last_login_update_succeeded = $last_login_stmt->execute()
+                            && $last_login_stmt->affected_rows === 1;
+                    }
+                } catch (mysqli_sql_exception $e) {
+                    $last_login_update_succeeded = false;
+                }
 
-                header("Location: dashboard.php");
-                exit;
+                if ($last_login_stmt) {
+                    $last_login_stmt->close();
+                }
+
+                if (!$last_login_update_succeeded) {
+                    http_response_code(503);
+                    $message = "Login is temporarily unavailable. Please try again later.";
+                } else {
+                    // Clear rate limit on successful login
+                    clear_rate_limit($ip_address, $endpoint);
+
+                    session_regenerate_id(true);
+                    $_SESSION["user_id"]   = (int)$user["id"];
+                    $_SESSION["user_name"] = $user["name"];
+                    $_SESSION["role"]      = $user["role"];
+
+                    header("Location: dashboard.php");
+                    exit;
+                }
             }
         } else {
             // Record failed attempt for rate limiting (even if user doesn't exist).
