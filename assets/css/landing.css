@@ -89,6 +89,19 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Hero entrance animations: disable entirely */
+  .hero-copy,
+  .ledger-preview {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Hero grid pattern: hide decorative background */
+  .hero::before {
+    display: none !important;
+  }
 }
 
 /* ==========================================================================
