@@ -18,7 +18,7 @@ $asset_path = $asset_path ?? 'assets/';
                 document.documentElement.setAttribute("data-theme", savedTheme);
             }
         } catch (error) {
-            // Use the default light theme when storage is unavailable.
+            
         }
     </script>
 </head>
@@ -27,13 +27,10 @@ $asset_path = $asset_path ?? 'assets/';
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <div class="dashboard-layout">
 
-    <!-- Reusable Sidebar -->
     <?php require_once __DIR__ . '/sidebar.php'; ?>
 
-    <!-- Main Content Wrapper -->
     <main id="main-content" class="dashboard-main">
-
-        <!-- Top Header Bar -->
+        
         <header class="dashboard-header">
             <div>
                 <p class="page-label"><?= htmlspecialchars($page_category ?? 'OVERVIEW') ?></p>
@@ -45,7 +42,7 @@ $asset_path = $asset_path ?? 'assets/';
                     <span class="visually-hidden">Toggle navigation</span>
                     <span aria-hidden="true">Menu</span>
                 </button>
-                <!-- Dark / Light Mode Toggle Button -->
+
                 <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle theme">
                     <svg id="themeIconSun" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
                         <circle cx="12" cy="12" r="5"></circle>
@@ -64,7 +61,6 @@ $asset_path = $asset_path ?? 'assets/';
                     <span id="themeToggleText">Dark</span>
                 </button>
 
-                <!-- User Profile Pill -->
                 <div class="user-profile">
                     <div class="user-avatar">
                         <?= strtoupper(substr($current_user_name, 0, 1)) ?>

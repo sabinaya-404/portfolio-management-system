@@ -1,12 +1,3 @@
-/* ==========================================================================
-   Portfolio Manager — Landing Page Styles
-   Unified design tokens from app (style.css) with ledger-specific accents
-   ========================================================================== */
-
-/* ==========================================================================
-   Design Tokens (mirror style.css)
-   ========================================================================== */
-
 :root {
   /* Light theme colors */
   --color-background: #f4f6f7;
@@ -24,7 +15,6 @@
   --color-warning: #b7791f;
   --color-danger: #b85c5c;
 
-  /* Semantic aliases */
   --canvas: var(--color-background);
   --surface: var(--color-surface);
   --primary: var(--color-primary);
@@ -33,7 +23,6 @@
   --motion-fast: 150ms;
   --motion-slow: 260ms;
 
-  /* Spacing scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -43,21 +32,19 @@
   --space-7: 48px;
   --space-8: 64px;
 
-  /* Border radius */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
 
-  /* Typography */
-  --font-sans: "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans:
+    "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
 
-  /* Content width */
   --content-measure: 1180px;
   --header-height: 64px;
 }
 
-/* Dark theme */
 [data-theme="dark"] {
   --color-background: #111615;
   --color-surface: #181d1b;
@@ -75,7 +62,6 @@
   --color-danger: #db8888;
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-fast: 0ms;
@@ -90,7 +76,6 @@
     scroll-behavior: auto !important;
   }
 
-  /* Hero entrance animations: disable entirely */
   .hero-copy,
   .ledger-preview {
     animation: none !important;
@@ -98,15 +83,10 @@
     transform: none !important;
   }
 
-  /* Hero grid pattern: hide decorative background */
   .hero::before {
     display: none !important;
   }
 }
-
-/* ==========================================================================
-   Base & Reset
-   ========================================================================== */
 
 *,
 *::before,
@@ -137,7 +117,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Skip link */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -159,32 +138,37 @@ body {
   box-shadow: var(--focus-ring);
 }
 
-/* Focus visible for all interactive elements */
 :focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
   border-radius: var(--radius-sm);
 }
 
-/* Selection */
 ::selection {
   background: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
-/* ==========================================================================
-   Typography
-   ========================================================================== */
-
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0 0 var(--space-3);
   font-weight: 700;
   line-height: 1.2;
   color: var(--color-text);
 }
 
-h1 { font-size: clamp(28px, 3.5vw, 40px); }
-h2 { font-size: clamp(22px, 2.5vw, 32px); }
-h3 { font-size: clamp(18px, 2vw, 24px); }
+h1 {
+  font-size: clamp(28px, 3.5vw, 40px);
+}
+h2 {
+  font-size: clamp(22px, 2.5vw, 32px);
+}
+h3 {
+  font-size: clamp(18px, 2vw, 24px);
+}
 
 p {
   margin: 0 0 var(--space-4);
@@ -202,17 +186,12 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Ledger-style mono for numbers/identifiers */
 .mono,
 .ledger-value,
 [data-ledger] {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
-
-/* ==========================================================================
-   Layout Utilities
-   ========================================================================== */
 
 .container {
   width: 100%;
@@ -237,10 +216,6 @@ a:hover {
   }
 }
 
-/* ==========================================================================
-   Header / Navigation
-   ========================================================================== */
-
 .site-header {
   position: fixed;
   top: 0;
@@ -251,7 +226,9 @@ a:hover {
   background: color-mix(in srgb, var(--color-surface) 95%, transparent);
   backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--color-border);
-  transition: background var(--motion-slow) ease, border-color var(--motion-slow) ease;
+  transition:
+    background var(--motion-slow) ease,
+    border-color var(--motion-slow) ease;
 }
 
 .header-inner {
@@ -320,7 +297,9 @@ a:hover {
   font-weight: 500;
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
-  transition: color var(--motion-fast) ease, background var(--motion-fast) ease;
+  transition:
+    color var(--motion-fast) ease,
+    background var(--motion-fast) ease;
 }
 
 .nav-links a:hover,
@@ -358,7 +337,12 @@ a:hover {
   border-radius: var(--radius-sm);
   cursor: pointer;
   text-decoration: none;
-  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    transform var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
 }
 
 .btn:hover {
@@ -394,7 +378,6 @@ a:hover {
   width: 100%;
 }
 
-/* Mobile menu button */
 .menu-toggle {
   display: none;
   align-items: center;
@@ -433,10 +416,6 @@ a:hover {
 .menu-toggle[aria-expanded="false"] .menu-icon-close {
   display: block;
 }
-
-/* ==========================================================================
-   Hero Section
-   ========================================================================== */
 
 .hero {
   position: relative;
@@ -486,8 +465,14 @@ a:hover {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-badge {
@@ -536,15 +521,20 @@ a:hover {
   color: var(--color-positive);
 }
 
-/* Ledger Preview Panel */
 .ledger-preview {
   position: relative;
   animation: slide-up var(--motion-slow) ease-out 100ms both;
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ledger-card {
@@ -552,7 +542,8 @@ a:hover {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 24px -8px color-mix(in srgb, var(--color-text) 12%, transparent);
+  box-shadow: 0 4px 24px -8px
+    color-mix(in srgb, var(--color-text) 12%, transparent);
 }
 
 .ledger-header {
@@ -714,10 +705,6 @@ a:hover {
   margin-left: 4px;
 }
 
-/* ==========================================================================
-   Section: What You Can Organize
-   ========================================================================== */
-
 .features {
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
@@ -763,12 +750,15 @@ a:hover {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+  transition:
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
 }
 
 .feature-card:hover {
   border-color: var(--color-border-strong);
-  box-shadow: 0 8px 32px -12px color-mix(in srgb, var(--color-text) 10%, transparent);
+  box-shadow: 0 8px 32px -12px
+    color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
 .feature-icon {
@@ -799,10 +789,6 @@ a:hover {
   margin: 0;
   color: var(--color-text-muted);
 }
-
-/* ==========================================================================
-   Section: How the Record Works
-   ========================================================================== */
 
 .how-it-works {
   background: var(--color-background);
@@ -867,7 +853,6 @@ a:hover {
   color: var(--color-text-muted);
 }
 
-/* Connecting line between steps */
 .steps::before {
   content: "";
   position: absolute;
@@ -903,10 +888,6 @@ a:hover {
     display: none;
   }
 }
-
-/* ==========================================================================
-   Section: Project Context
-   ========================================================================== */
 
 .about {
   background: var(--color-surface);
@@ -999,10 +980,6 @@ a:hover {
   color: var(--color-text);
 }
 
-/* ==========================================================================
-   CTA Section
-   ========================================================================== */
-
 .cta {
   background: var(--color-background);
   text-align: center;
@@ -1033,10 +1010,6 @@ a:hover {
   justify-content: center;
   gap: var(--space-3);
 }
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
 
 .site-footer {
   padding: var(--space-6) 0;
@@ -1095,10 +1068,6 @@ a:hover {
   color: var(--color-primary);
 }
 
-/* ==========================================================================
-   Mobile Navigation (≤900px)
-   ========================================================================== */
-
 @media (max-width: 900px) {
   .menu-toggle {
     display: flex;
@@ -1148,15 +1117,10 @@ a:hover {
     font-size: 15px;
   }
 
-  /* Body lock when menu open */
   body.nav-open {
     overflow: hidden;
   }
 }
-
-/* ==========================================================================
-   Responsive Breakpoints (aligned with app: 900/640/390)
-   ========================================================================== */
 
 @media (max-width: 900px) {
   :root {
@@ -1212,15 +1176,12 @@ a:hover {
   }
 }
 
-/* ==========================================================================
-   Reveal Animations
-   ========================================================================== */
-
-/* Visible by default; hidden only when JS enables progressive enhancement */
 .reveal {
   opacity: 1;
   transform: none;
-  transition: opacity var(--motion-slow) ease, transform var(--motion-slow) ease;
+  transition:
+    opacity var(--motion-slow) ease,
+    transform var(--motion-slow) ease;
 }
 
 .js-enabled .reveal {
@@ -1240,10 +1201,6 @@ a:hover {
     transition: none;
   }
 }
-
-/* ==========================================================================
-   Print Styles
-   ========================================================================== */
 
 @media print {
   .site-header,
