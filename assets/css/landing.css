@@ -1203,19 +1203,25 @@ a:hover {
    Reveal Animations
    ========================================================================== */
 
+/* Visible by default; hidden only when JS enables progressive enhancement */
 .reveal {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: none;
   transition: opacity var(--motion-slow) ease, transform var(--motion-slow) ease;
 }
 
-.reveal.is-visible {
+.js-enabled .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.js-enabled .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .js-enabled .reveal {
     opacity: 1;
     transform: none;
     transition: none;

@@ -1,6 +1,9 @@
 (() => {
     "use strict";
 
+    // Enable progressive enhancement for reveal animations
+    document.documentElement.classList.add("js-enabled");
+
     // ==========================================================================
     // Mobile Navigation with Focus Management
     // ==========================================================================
