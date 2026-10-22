@@ -220,12 +220,10 @@ if ($demat_id > 0) {
         $total_invested = 0.0;
         foreach ($holdings as &$holding) {
             $total_value += (float) $holding["market_value"];
-            // Calculate invested amount for this holding
             $invested_amount = (float) $holding["quantity"] * (float) ($holding['purchase_price'] ?? 0);
             $holding['invested_amount'] = $invested_amount;
             $total_invested += $invested_amount;
 
-            // Calculate profit/loss for this holding (only if purchase_price exists)
             if (!empty($holding['purchase_price'])) {
                 $purchase_price = (float) $holding['purchase_price'];
                 $current_price = (float) $holding["current_price"];
@@ -234,10 +232,10 @@ if ($demat_id > 0) {
                 $holding['profit_loss'] = $profit_loss;
                 $total_profit_loss += $profit_loss;
             } else {
-                $holding['profit_loss'] = 0; // No P/L for holdings without purchase price
+                $holding['profit_loss'] = 0;
             }
         }
-        unset($holding); // Break the reference with the last element
+        unset($holding);
 
         $companies_stmt = $conn->prepare(
             "SELECT id, symbol, company_name
@@ -433,7 +431,6 @@ require_once "includes/header.php";
                                     </div>
                                 </td>
                                 <td class="numeric-cell">
-                                    <!-- Searchable company select for edit -->
                                     <div class="searchable-select" data-placeholder="Select company" data-company-id="<?= (int) $holding["company_id"] ?>" data-company-symbol="<?= htmlspecialchars($holding["symbol"] . " — " . $holding["company_name"]) ?>">
                                         <input type="hidden" name="company_id" value="<?= (int) $holding["company_id"] ?>">
                                         <div class="searchable-select-control" aria-haspopup="listbox" aria-expanded="false">

@@ -35,7 +35,6 @@ function init_rate_limit_table() {
             $column_check->close();
         }
     } catch (mysqli_sql_exception $e) {
-        // Log error but don't break the application
         log_error("Failed to create rate_limits table: " . $e->getMessage(), "init_rate_limit_table");
     }
 }
@@ -53,10 +52,8 @@ function init_rate_limit_table() {
 function is_rate_limited($ip_address, $endpoint, $max_attempts = 5, $window_seconds = 300, $lockout_seconds = null) {
     global $conn;
 
-    // Initialize table if needed
     init_rate_limit_table();
 
-    // Clean up records older than twice the longest active window.
     $cleanup_sql = "DELETE FROM rate_limits
                     WHERE window_start < DATE_SUB(NOW(), INTERVAL ? SECOND)
                     AND (locked_until IS NULL OR locked_until <= NOW())";
@@ -81,7 +78,6 @@ function is_rate_limited($ip_address, $endpoint, $max_attempts = 5, $window_seco
         return $is_locked;
     }
 
-    // Get current attempt count for this IP and endpoint.
     $select_sql = "SELECT MAX(attempt_count) AS attempt_count FROM rate_limits
                    WHERE ip_address = ? AND endpoint = ?
                    AND window_start > DATE_SUB(NOW(), INTERVAL ? SECOND)";
@@ -169,7 +165,6 @@ function release_rate_limit_lock($lock_name) {
 function record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts = null, $lockout_seconds = null) {
     global $conn;
 
-    // Initialize table if needed
     init_rate_limit_table();
 
     $lock_name = get_rate_limit_lock_name($ip_address, $endpoint);
@@ -188,7 +183,6 @@ function record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_att
             }
         }
 
-        // Try to update an unlocked record first.
         if ($max_attempts !== null && $lockout_seconds !== null) {
             $update_sql = "UPDATE rate_limits SET
                            locked_until = CASE
@@ -212,7 +206,6 @@ function record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_att
         }
         $stmt->execute();
 
-        // If no record was updated, insert a new one
         if ($stmt->affected_rows === 0) {
             $stmt->close();
             $insert_sql = "INSERT INTO rate_limits (ip_address, endpoint, attempt_count, window_start)
@@ -258,8 +251,6 @@ function clear_rate_limit($ip_address, $endpoint) {
  * @return string The client IP address
  */
 function get_client_ip() {
-    // Only use REMOTE_ADDR as it cannot be spoofed by the client
-    // Headers like HTTP_X_FORWARDED_FOR can be set by clients to bypass rate limiting
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 ?>

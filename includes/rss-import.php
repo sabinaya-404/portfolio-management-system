@@ -18,19 +18,16 @@ if (!defined('INCLUDES_RSS_IMPORT')) {
  * @return array|null Sanitized data or null if invalid
  */
 function validateRssItem(string $title, string $description, string $link, string $pubDate) {
-    // Validate title
     $title = trim($title);
     if ($title === '' || mb_strlen($title) > 200) {
         return null;
     }
 
-    // Validate description (can be empty but limit length)
     $description = trim($description);
-    if (mb_strlen($description) > 10000) { // Reasonable limit for content
+    if (mb_strlen($description) > 10000) {
         $description = mb_substr($description, 0, 10000);
     }
 
-    // Validate link
     $link = trim($link);
     if ($link === '' || !filter_var($link, FILTER_VALIDATE_URL) || !preg_match("/^https?:\/\//i", $link)) {
         return null;
@@ -40,16 +37,15 @@ function validateRssItem(string $title, string $description, string $link, strin
         return null;
     }
 
-    // Validate and parse publication date
     $parsedDate = null;
     $formatsToTry = [
-        'D, d M Y H:i:s O',      // RFC 822 (Wed, 02 Oct 2002 08:00:00 EST)
-        'd M Y H:i:s O',         // Without day of week
-        'D, d M Y H:i:s T',      // RFC 822 with timezone abbrev
-        'Y-m-d H:i:s',           // ISO-like
-        'Y-m-d',                 // Date only
-        'd M Y',                 // 02 Oct 2002
-        'M d, Y',                // Oct 02, 2002
+        'D, d M Y H:i:s O',
+        'd M Y H:i:s O',
+        'D, d M Y H:i:s T',
+        'Y-m-d H:i:s',
+        'Y-m-d',
+        'd M Y',
+        'M d, Y',
     ];
 
     foreach ($formatsToTry as $format) {
@@ -60,7 +56,6 @@ function validateRssItem(string $title, string $description, string $link, strin
         }
     }
 
-    // If we couldn't parse the date, return null to skip this item
     if ($parsedDate === null) {
         return null;
     }
@@ -81,20 +76,16 @@ function validateRssItem(string $title, string $description, string $link, strin
  * @return bool True if financially relevant, false otherwise
  */
 function isFinanciallyRelevant(string $title, string $description): bool {
-    // Convert to lowercase for case-insensitive matching; strip HTML tags from description
     $titleLower = mb_strtolower($title);
     $descLower = mb_strtolower(strip_tags($description));
 
-    // Key financial terms in English and Nepali (Devanagari)
     $financialTerms = [
-        // English terms
         'share', 'shares', 'stock', 'stocks', 'market', 'nepse', 'ipo',
         'securities', 'trading', 'bull', 'index', 'dividend',
         'portfolio', 'investment', 'finance', 'financial',
         'earnings', 'results', 'profit', 'loss', 'turnover',
         'volume', 'bid', 'broker', 'demat',
 
-        // Nepali terms (Devanagari)
         'शेयर', 'सेयर', 'स्टक', 'मार्केट', 'नेप्से', 'आईपीओ', 'सिक्युरिटी',
         'ट्रेडिङ', 'इन्डेक्स', 'डिभिडेन्ड', 'पोर्टफोलियो', 'निवेश',
         'वित्तीय', 'कॉर्पोरेट', 'अर्निंग', 'परिणाम', 'नाफा',
@@ -102,7 +93,6 @@ function isFinanciallyRelevant(string $title, string $description): bool {
         'डेमाट'
     ];
 
-    // Check each term in title or description
     foreach ($financialTerms as $term) {
         if (mb_strpos($titleLower, $term) !== false ||
             mb_strpos($descLower, $term) !== false) {
@@ -130,7 +120,6 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
         'items_processed' => 0
     ];
 
-    // Fetch RSS feed content with cURL
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $feedUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -156,15 +145,12 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
         return $results;
     }
 
-    // Parse XML
     libxml_use_internal_errors(true);
 
-    // Extract valid XML part if there's extra content (e.g., Cloudflare beacon)
     $xmlContentToParse = $xmlContent;
     $rssEndPos = strpos($xmlContent, '</rss>');
     $feedEndPos = strpos($xmlContent, '</feed>');
 
-    // Find the earliest ending position
     $endPos = PHP_INT_MAX;
     $foundEnd = false;
 
@@ -178,7 +164,6 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
     }
 
     if ($foundEnd && $endPos < strlen($xmlContent)) {
-        // Extract just the XML part
         $xmlContentToParse = substr($xmlContent, 0, $endPos);
     }
 
@@ -195,7 +180,6 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
     }
     libxml_clear_errors();
 
-    // Find items - handle different RSS structures
     $items = null;
     if (isset($xml->channel)) {
         if (isset($xml->channel->item)) {
@@ -210,30 +194,25 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
         return $results;
     }
 
-    // Process each item
     foreach ($items as $item) {
         $results['items_processed']++;
 
-        // Extract item data
         $title = isset($item->title) ? (string)$item->title : '';
         $description = isset($item->description) ? (string)$item->description : '';
         $link = isset($item->link) ? (string)$item->link : '';
         $pubDate = isset($item->pubDate) ? (string)$item->pubDate : '';
 
-        // Validate item data
         $validated = validateRssItem($title, $description, $link, $pubDate);
         if ($validated === null) {
             $results['errors'][] = "Invalid item data (missing/invalid date) in feed {$feedUrl}";
             continue;
         }
 
-        // Check if item is financially relevant
         if (!isFinanciallyRelevant($validated['title'], $validated['description'])) {
-            $results['skipped']++; // Count as skipped (irrelevant content)
+            $results['skipped']++;
             continue;
         }
 
-        // Check for duplicate: same source_url (regardless of feed)
         $checkStmt = $conn->prepare(
             "SELECT id FROM ipo_news WHERE source_url = ? LIMIT 1"
         );
@@ -242,10 +221,8 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
         if ($checkStmt->execute()) {
             $result = $checkStmt->get_result();
             if ($result->num_rows > 0) {
-                // Duplicate found - skip
                 $results['skipped']++;
             } else {
-                // No duplicate - insert new item
                 $type = 'news';
                 $title = $validated['title'];
                 $description = $validated['description'];
@@ -270,14 +247,12 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
                 if ($insertStmt->execute()) {
                     $results['imported']++;
                 } else {
-                    // Log detailed error but show generic message to user
                     error_log("Database error inserting RSS item: " . $insertStmt->error);
                     $results['errors'][] = "Database error processing item.";
                 }
                 $insertStmt->close();
             }
         } else {
-            // Log detailed error but show generic message to user
             error_log("Database error checking for duplicates: " . $checkStmt->error);
             $results['errors'][] = "Database error checking for duplicates.";
         }
@@ -294,12 +269,6 @@ function importRssFeed(mysqli $conn, string $feedUrl, int $adminUserId) {
  * @return array List of RSS feed URLs
  */
 function getConfiguredRssFeeds() {
-    // For now, hardcode the initial feed as specified in the requirements
-    // In future versions, this could be loaded from:
-    // - A database table (rss_feeds)
-    // - A configuration file
-    // - The admin interface
-
     return [
         'https://www.setopati.com/feed',
         'https://www.ratopati.com/feed'
@@ -316,12 +285,10 @@ function getConfiguredRssFeeds() {
 function getRssSystemUserId(mysqli $conn) {
     static $cachedUserId = null;
 
-    // Return cached value if available
     if ($cachedUserId !== null) {
         return $cachedUserId;
     }
 
-    // Query for an admin user
     $stmt = $conn->prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
     if ($stmt === false) {
         error_log("Failed to prepare statement for getRssSystemUserId: " . $conn->error);
@@ -339,5 +306,5 @@ function getRssSystemUserId(mysqli $conn) {
     }
 
     $stmt->close();
-    return null; // No admin user found
+    return null;
 }

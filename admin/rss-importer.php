@@ -13,15 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $action = (string) ($_POST["action"] ?? "");
 
         if ($action === "import_feed") {
-            // Get current admin user ID from session
             $adminUserId = $_SESSION["user_id"] ?? null;
             if ($adminUserId === null) {
                 $message = "Unable to identify admin user. Please log in again.";
             } else {
-                // Get feeds to import
                 $feeds = getConfiguredRssFeeds();
 
-                // If specific feeds selected, only import those
                 if (!empty($_POST['feeds'])) {
                     $selectedFeeds = array_map('trim', $_POST['feeds']);
                     $feeds = array_values(array_intersect($feeds, $selectedFeeds));
@@ -30,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if (empty($feeds)) {
                     $message = "No feeds selected for import.";
                 } else {
-                    // Import each feed
                     $totalImported = 0;
                     $totalSkipped = 0;
                     $allErrors = [];
@@ -63,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Get available feeds for the form
 $feeds = getConfiguredRssFeeds();
 
 $page_title = "RSS Feed Importer";

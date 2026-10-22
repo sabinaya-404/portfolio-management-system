@@ -3,7 +3,6 @@ require_once "includes/session.php";
 require_once "includes/rate_limit.php";
 require_once "includes/logger.php";
 
-// If already logged in, redirect to dashboard
 if (isset($_SESSION["user_id"])) {
     header("Location: dashboard.php");
     exit;
@@ -11,17 +10,16 @@ if (isset($_SESSION["user_id"])) {
 
 require_once "config/database.php";
 
-// Rate limiting configuration
 $ip_address = get_client_ip();
 $endpoint = "login";
-$max_attempts = 5; // Five failed attempts before lockout
-$window_seconds = 300; // Counting window
-$lockout_seconds = 1200; // 20-minute lockout
+$max_attempts = 5;
+$window_seconds = 300;
+$lockout_seconds = 1200;
 
 $message = "";
 $rate_limited = is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds, $lockout_seconds);
 if ($rate_limited) {
-    http_response_code(429); // Too Many Requests
+    http_response_code(429);
     $message = "Too many login attempts. Please try again later.";
 }
 
@@ -43,7 +41,6 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
             $user = $result->fetch_assoc();
 
             if (!password_verify($password, $user["password"])) {
-                // Record failed attempt for rate limiting.
                 $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
             } elseif ($user["account_status"] === "disabled") {
                 $message = "Your account has been disabled by the admin.";
@@ -72,7 +69,6 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
                     http_response_code(503);
                     $message = "Login is temporarily unavailable. Please try again later.";
                 } else {
-                    // Clear rate limit on successful login
                     clear_rate_limit($ip_address, $endpoint);
 
                     session_regenerate_id(true);
@@ -85,7 +81,6 @@ if (!$rate_limited && $_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             }
         } else {
-            // Record failed attempt for rate limiting (even if user doesn't exist).
             $failed_attempts = record_failed_attempt($ip_address, $endpoint, $window_seconds, $max_attempts, $lockout_seconds);
         }
 

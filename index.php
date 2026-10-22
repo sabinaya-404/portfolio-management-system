@@ -26,8 +26,6 @@ if (isset($_SESSION["user_id"])) {
 
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<!-- ================= HEADER ================= -->
-
 <header class="site-header" role="banner">
     <div class="header-inner">
         <a href="#home" class="logo" aria-label="Portfolio Manager home">
@@ -63,11 +61,7 @@ if (isset($_SESSION["user_id"])) {
     </div>
 </header>
 
-<!-- ================= MAIN CONTENT ================= -->
-
 <main id="main-content" class="landing-page" role="main">
-
-<!-- ================= HERO ================= -->
 
 <section class="hero" id="home" aria-labelledby="hero-heading">
     <div class="container hero-inner">
@@ -93,7 +87,6 @@ if (isset($_SESSION["user_id"])) {
             </div>
         </div>
 
-        <!-- Ledger Preview Panel -->
         <aside class="ledger-preview" aria-label="Portfolio record preview (illustrative data)">
             <div class="ledger-card">
                 <div class="ledger-header">
@@ -168,8 +161,6 @@ if (isset($_SESSION["user_id"])) {
     </div>
 </section>
 
-<!-- ================= SECTION: WHAT YOU CAN ORGANIZE ================= -->
-
 <section class="features section" id="features" aria-labelledby="features-heading">
     <div class="container">
         <header class="section-header">
@@ -219,8 +210,6 @@ if (isset($_SESSION["user_id"])) {
     </div>
 </section>
 
-<!-- ================= SECTION: HOW THE RECORD WORKS ================= -->
-
 <section class="how-it-works section" id="how-it-works" aria-labelledby="how-heading">
     <div class="container">
         <header class="section-header">
@@ -252,8 +241,6 @@ if (isset($_SESSION["user_id"])) {
         </ol>
     </div>
 </section>
-
-<!-- ================= SECTION: PROJECT CONTEXT ================= -->
 
 <section class="about section" id="about" aria-labelledby="about-heading">
     <div class="container about-grid">
@@ -308,8 +295,6 @@ if (isset($_SESSION["user_id"])) {
     </div>
 </section>
 
-<!-- ================= CTA SECTION ================= -->
-
 <section class="cta section" id="get-started" aria-labelledby="cta-heading">
     <div class="container">
         <div class="cta-card">
@@ -324,8 +309,6 @@ if (isset($_SESSION["user_id"])) {
 </section>
 
 </main>
-
-<!-- ================= FOOTER ================= -->
 
 <footer class="site-footer" role="contentinfo">
     <div class="footer-inner">

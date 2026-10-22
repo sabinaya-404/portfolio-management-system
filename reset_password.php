@@ -46,20 +46,17 @@ if (empty($token)) {
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
                 $user_id = (int)$reset["user_id"];
 
-                // Update user password
-                $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                                $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
                 $stmt->bind_param("si", $password_hash, $user_id);
                 $stmt->execute();
                 $stmt->close();
 
-                // Invalidate token
-                $stmt = $conn->prepare("DELETE FROM password_resets WHERE id = ?");
+                                $stmt = $conn->prepare("DELETE FROM password_resets WHERE id = ?");
                 $stmt->bind_param("i", $reset["id"]);
                 $stmt->execute();
                 $stmt->close();
 
-                // Invalidate current session and regenerate session ID
-                $_SESSION = [];
+                                $_SESSION = [];
                 session_regenerate_id(true);
                 $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 

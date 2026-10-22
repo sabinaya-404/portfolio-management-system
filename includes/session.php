@@ -18,7 +18,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
     session_start();
 
-    // Security headers
     header("X-Content-Type-Options: nosniff");
     header("X-Frame-Options: SAMEORIGIN");
     header("Referrer-Policy: strict-origin-when-cross-origin");

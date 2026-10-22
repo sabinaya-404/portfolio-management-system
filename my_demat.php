@@ -2,7 +2,6 @@
 require_once "includes/auth.php";
 require_once "config/database.php";
 
-// Fetch user's accounts
 $stmt = $conn->prepare(
     "SELECT id, account_name, account_holder, broker_name, boid, created_at
      FROM demat_accounts
@@ -14,7 +13,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $demat_count = $result->num_rows;
 
-// Check for session flash messages
 $flash_success = $_SESSION['flash_success'] ?? "";
 $flash_error   = $_SESSION['flash_error'] ?? "";
 unset($_SESSION['flash_success'], $_SESSION['flash_error']);
@@ -26,8 +24,6 @@ $active_page   = "demat";
 
 require_once "includes/header.php";
 ?>
-
-<!-- Flash Alerts -->
 <?php if (!empty($flash_success)): ?>
     <div class="alert alert-success" role="status" aria-live="polite"><?= htmlspecialchars($flash_success) ?></div>
 <?php endif; ?>
@@ -35,8 +31,6 @@ require_once "includes/header.php";
 <?php if (!empty($flash_error)): ?>
     <div class="alert alert-error" role="alert" aria-live="polite"><?= htmlspecialchars($flash_error) ?></div>
 <?php endif; ?>
-
-<!-- Top Toolbar: Search & Add Button -->
 <div class="page-toolbar">
     <div class="search-field">
         <input 
@@ -104,15 +98,12 @@ require_once "includes/header.php";
         <?php endwhile; ?>
     </div>
 
-    <!-- Hidden message when search has 0 results -->
     <div id="noSearchResults" class="empty-state" style="display: none; margin-top: 16px;">
         <h4>No matching accounts found</h4>
         <p>Try searching with a different account name, broker, or BOID.</p>
     </div>
 <?php endif; ?>
 <?php $result->free(); $stmt->close(); ?>
-
-<!-- Vanilla JS Instant Search -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById("dematSearchInput");

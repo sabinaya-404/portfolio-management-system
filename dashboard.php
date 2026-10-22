@@ -2,7 +2,6 @@
 require_once "includes/auth.php";
 require_once "config/database.php";
 
-// 1. Fetch user's Demat accounts
 $stmt = $conn->prepare(
     "SELECT id, account_name, account_holder, broker_name, boid,
             (SELECT COUNT(*) FROM demat_accounts WHERE user_id = ?) AS total_count
@@ -18,7 +17,6 @@ $demat_rows = $demat_accounts->fetch_all(MYSQLI_ASSOC);
 $demat_count = $demat_rows ? (int)$demat_rows[0]["total_count"] : 0;
 $stmt->close();
 
-// 2. Fetch company and market stats
 $allocation_stmt = $conn->prepare(
     "SELECT c.symbol, c.company_name, SUM(h.quantity * c.current_price) AS market_value
      FROM holdings AS h
@@ -37,7 +35,6 @@ foreach ($allocation_rows as $allocation_row) {
     $portfolio_value += (float) $allocation_row["market_value"];
 }
 
-// 2.5. Fetch total invested amount across all user's holdings
 $invested_stmt = $conn->prepare(
     "SELECT COALESCE(SUM(h.quantity * h.purchase_price), 0) AS total_invested
      FROM holdings AS h
@@ -128,8 +125,6 @@ require_once "includes/header.php";
 </section>
 
 <div class="dashboard-columns dashboard-columns-featured">
-
-    <!-- Left: Demat Accounts Summary Table -->
     <div class="dashboard-card open-panel allocation-panel">
         <div class="card-header">
             <div>

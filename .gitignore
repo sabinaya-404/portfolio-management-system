@@ -1,20 +1,14 @@
-# Local environment/config
 sql/
 .env
 test/
+docs/
 
-# Copilot / Spec Kit
-.github/
-.specify/
 
-# IDE/editor files
 .vscode/
 .idea/
 
-# OS files
 .DS_Store
 Thumbs.db
 
-# Temporary files
 *.log
 *.tmp

@@ -8,10 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST" || !verify_csrf_token($_POST["csrf_tok
     exit;
 }
 
-// Unset all session array values
 $_SESSION = [];
 
-// Delete the actual session cookie from browser
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(
@@ -25,7 +23,6 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Destroy session on server
 session_destroy();
 
 header("Location: login.php");

@@ -13,18 +13,15 @@ require_once "includes/logger.php";
 $message = "";
 $message_type = "error";
 
-// Rate limiting configuration
 $ip_address = get_client_ip();
 $endpoint = "register";
-$max_attempts = 3; // 3 attempts
-$window_seconds = 900; // 15 minutes
+$max_attempts = 3;
+$window_seconds = 900;
 
-// Check if IP is rate limited
 if (is_rate_limited($ip_address, $endpoint, $max_attempts, $window_seconds)) {
-    http_response_code(429); // Too Many Requests
+    http_response_code(429);
     $message = "Too many registration attempts. Please try again later.";
     $message_type = "error";
-    // Don't process the form further
     $_POST = [];
 }
 
@@ -37,11 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $password         = $_POST["password"] ?? "";
         $confirm_password = $_POST["confirm_password"] ?? "";
 
-        // Check if all required fields are provided (basic format validation)
-        if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
+if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
             $message = "Please fill in all required fields.";
         } else {
-            // Record attempt for rate limiting (after basic validation but before format validation)
             record_failed_attempt($ip_address, $endpoint, $window_seconds);
 
             if (mb_strlen($name) > 100) {
@@ -79,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if ($stmt->execute()) {
                         $message = "Registration successful! You can now log in.";
                         $message_type = "success";
-                        // Clear rate limit on successful registration
                         clear_rate_limit($ip_address, $endpoint);
                     } else {
                         $message = "Registration failed. Please try again.";
